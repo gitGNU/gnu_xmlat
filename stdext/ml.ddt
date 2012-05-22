@@ -1,0 +1,454 @@
+&# include <LIB/lang.ddt>
+
+&& under_construction
+&: Generates some text that means that the page is under construction.
+&: <no_params>
+<p>
+<img src="/images/undconst.gif" alt="Page under Construction" hspace=10
+     align="middle">
+<font color="&!color:black;" size="+2" face="Verdana, Sans-Serif" style="text-decoration:none">
+&# if (=lang, it)
+Pagina in fase di allestimento
+&# if (=lang, en)
+Page under construction
+&# endif
+</font>
+<p>
+
+&& people_list
+&: Inizia una lista di persone come nella pagina dei componenti del
+&: <a href="http://medialab.di.unipi.it/people.html">laboratorio</a>.
+&: <no_params>
+<UL>
+
+&& /people_list
+&: Chiude il tag <tag>people_list</tag>.
+&: <no_params>
+</UL>
+
+&& people_el
+&: Rappresenta il riferimento ad una persona in una <tag>people_list</tag>.
+&: <params>
+&:   <param name="mail" value="Indirizzo E-Mail della persona">
+&:   <param name="name" value="Nome della persona">
+&: </params>
+  <LI>&!name; (<a href="mailto:&!mail;">&!mail;</a>)
+
+&& project_name
+&: Da precedere al nome del progetto. Serve a settare gli stili e il link
+&: per tornare alla pagina principale del progetto.
+&: <params>
+&:   <param name="url" value="URL a cui saltare quando viene cliccato sul
+&:                            titolo. Usare la home page del progetto.">
+&: </params>
+&# if (lang, yes)
+  <center><b><a href="&!url;-&=lang;.html" style="color:white">
+&# if !(lang, yes)
+  <center><b><a href="&!url;" style="color:white">
+&# endif
+  <font color="white" size="+3" face="Verdana, Sans-Serif" style="text-decoration:none">
+
+&& /project_name
+&: Chiude il tag </tag>project_name</tag>
+&: <no_params>
+  </font></a></b></center>
+
+&& ml_title
+&: Stile relativo al titolo del laboratorio multimediale.
+&: <no_params>
+<H2><FONT FACE="Arial Narrow, Arial, Helvetica">
+
+&& /ml_title
+&: Chiude lo stile <tag>ml_title</tag>.
+&: <no_params>
+</FONT></H2>
+
+&& ml_body
+&: Body del documento del laboratorio multimediale.
+&: <no_params>
+<BODY LEFTMARGIN="0" TOPMARGIN="0" MARGINWIDTH="0" MARGINHEIGHT="0"
+ TEXT="black" BGCOLOR="white"
+ LINK="#0000CC" VLINK="#333399" ALINK="red">
+
+&& /ml_body
+&: Chiude il body del documento.
+&: <no_params>
+</BODY>
+
+&& standard_header
+&: Header standard di un documento. Da includere tra <tag>head</tag> e
+&: <tag>/head</tag>. Prepara il content type, l'autore, l'e-mail e il titolo
+&: di una pagina.
+&: <params>
+&:   <param name="author" value="Autore del documento">
+&:   <param name="mail" value="E-Mail dell'autore">
+&:   <param name="title" value="Titolo del documento">
+&: </params>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="author" CONTENT="&!author;">
+   <META NAME="owner" CONTENT="&!mail;">
+   <META NAME="lang" CONTENT="en.uk">
+   <META NAME="date" CONTENT="$Date: 1999/08/26 09:30:12 $">
+   <TITLE>&!title;</TITLE>
+
+&& header
+&: Definisce l'intestazione di una pagina del Laboratorio Multimediale.
+&: L'intestazione &egrave; composta da:<p>
+&: <tag>header</tag><br>
+&: Page title<br>
+&: <tag>navbar</tag><br>
+&: Definizione dei bottoni usando i tag <tag>button</tag> e 
+&: <tag>defbutton</tag>.<br>
+&: <tag>/navbar</tag><br>
+&: <tag>/header</tag><br>
+&: <no_params>
+<table border="0" cellspacing=0 cellpadding=8 width="100%" bgcolor="#336699">
+ <tr>
+  <td>
+
+&& navbar
+&: Definisce la barra di navigazione della pagina.<p>
+&: <no_params>
+  </td>
+ </tr>
+ <!-- BEGIN NAVIGATION BAR -->
+ <tr>
+  <td>
+   <center>
+   <table border="0" cellpadding="0" cellspacing="3" width="100%">
+    <tr>
+
+&& defbutton
+&: Introduce il bottone di default della barra (quello selezionato).
+&: Per consistenza si consiglia di utilizzarne solo uno per barra.<p>
+&: <params>
+&:   <param name="width" value="Dimensione del tasto (si consiglia 100% / n.tasti)">
+&:   <param name="url" value="URL a cui saltare se premuto">
+&:   <param name="name" value="Stringa da visualizzare sul bottone">
+&: </params>
+     <td width="&!width:20%;" bgcolor="#009999">
+     <a href="&!url;" style="color:#FFFF99">
+     <font color="#FFFF99" size="-1" face="Verdana, Sans-Serif" style="text-decoration:none"><center><b>
+     &!name;</b></center></font></a></td>
+
+&& button
+&: Introduce un bottone nella barra.
+&: <params>
+&:   <param name="width" value="Dimensione del tasto (si consiglia 100% / n.tasti)">
+&:   <param name="url" value="URL a cui saltare se premuto">
+&:   <param name="name" value="Stringa da visualizzare sul bottone">
+&: </params>
+     <td width="&!width:20%;" bgcolor="#003366">
+     <a href="&!url;" style="color:white">
+     <font color="white" size="-1" face="Verdana, Sans-Serif" style="text-decoration:none"><center><b>
+     &!name;</b></center></font></a></td>
+
+&& navbut
+&# if (default, yes)
+&#= navbut_txtcol = #FFFF99
+&#= navbut_bgcol = #009999
+&# if !(default, yes)
+&#= navbut_txtcol = white
+&#= navbut_bgcol = #003366
+&# endif
+     <td width="&!width:20%;" bgcolor="&=navbut_bgcol;">
+&# if (lang, yes)
+     <a href="&!url;-&=lang;.html" 
+&# if !(lang, yes)
+     <a href="&!url;"
+&# endif
+     style="color:&=navbut_txtcol;;">
+     <font color="&=navbut_txtcol;" size="-1" face="Verdana, Sans-Serif" style="text-decoration:none"><center><b>
+
+&& /navbut
+</b></center></font></a></td>
+
+&& /navbar
+&: Chiude la barra di navigazione.
+&: <no_params>
+     </font>
+    </tr>
+   </table>
+   </center>
+  </td>
+ </tr>
+
+&& /header
+&: Chiude l'intestazione di una pagina.
+&: <no_params>
+ <!-- END NAVIGATION BAR -->
+</table>
+
+&& img_list
+&: Lista i cui punti sono immagini. Un esempio di uso della lista si pu&ograve;
+&: trovare nella prima pagina di <a href="http://medialab.di.unipi.it/">Janet</a>.
+&: Ogni elemento &egrave; costituito da un immagine con a fianco un titolo e
+&: un testo sottostante. Si veda il tag <tag>img_element</tag> per vedere come
+&: descrivere ogni riga. Nella prima pagina si usano anche i tag <i>person</i>
+&: per descrivere le persone che afferiscono ad un progetto.
+&: <no_params>
+<TABLE BORDER="0" CELLPADDING="4" CELLSPACING="4">
+
+&& /img_list
+&: Chiude il tag <tag>img_list</tag>.
+&: <no_params>
+</table>
+
+&& img_element
+&: Elemento di una lista di immagini (si faccia riferimento al tag 
+&: <tag>img_list</tag>). Un elemento di immmagine si compone di un'immagine
+&: al cui fianco si trova un titolo e del testo. Al titolo e all'immagine
+&: sono associate delle URL.
+&: <params>
+&:   <param name="img_url" value="URL a cui andare quando viene selezionata 
+&:                                l'immagine.">
+&:   <param name="img_src" value="URL contenente l'immagine. 
+&:                                Es. /images/compass.gif">
+&:   <param name="img_width" value="Larghezza dell'immagine." default="96">
+&:   <param name="img_height" value="Altezza dell'immagine." default="96">
+&:   <param name="txt_url" value="URL a cui andare quando viene selezionato il
+&:                                testo.">
+&:   <param name="txt_value" value="Testo da visualizzare (titolo).">
+&: </params>
+ <TR VALIGN="top">
+ <TD ALIGN="center" VALIGN="top">
+&# if (lang, yes)
+  <A HREF="&!img_url;-&=lang;.html" TARGET="_top">
+&# if !(lang, yes)
+  <A HREF="&!img_url;" TARGET="_top">
+&# endif
+  <IMG BORDER="0" SRC="&!img_src;" WIDTH="&!img_width:96;" HEIGHT="&!img_height:96;"></A>
+ </TD>
+ <TD ALIGN="left">
+  <FONT  FACE="Arial, Helvetica">
+  <B><FONT SIZE="+1">
+&# if (lang, yes)
+  <a href="&!txt_url:&!img_url;;-&=lang;.html" target="_top">
+&# if !(lang, yes)
+  <a href="&!txt_url:&!img_url;;" target="_top">
+&# endif
+&# if (=lang, it)
+&!txt_value_it:&!txt_value;;</a></FONT></B>
+&# if (=lang, en)
+&!txt_value_en:&!txt_value;;</a></FONT></B>
+&# endif
+  <BR>
+
+&& /img_element
+&: Chiude il tag <tag>img_element</tag>.
+&: <no_params>
+   </FONT>
+ </TD>
+ </TR>
+
+&& first_person
+&: Prima persona riferimento di un progetto. Questo tag &egrave; stato
+&: utilizzato nella prima pagina di 
+&: <a href="http://medialab.di.unipi.it/">Janet</a> e visualizza la scritta
+&: <i>di</i> <i>Nome persona</i> dove il nome della persona &egrave;
+&: la prima della lista ed &egrave; cliccabile.
+&: <params>
+&:   <param name="url" value="URL associata al nome">
+&:   <param name="name" value="Nome della persona">
+&: </params>
+&# if (=lang, it)
+  <I>di</I>
+&# if (=lang, en)
+  <I>by</I>
+&# endif
+&# if (url, "^.+$")
+  <A HREF="&!url;" TARGET="_top">
+&# endif
+  <FONT COLOR="black">&!name;</FONT>
+&# if (url, "^.+$")
+</A>
+&# endif
+
+&& person
+&: Rappresenta una persona nella lista delle persone (si veda il tag
+&: <tag>first_person</tag>).
+&: <params>
+&:   <param name="url" value="URL associata al nome">
+&:   <param name="name" value="Nome della persona">
+&: </params>
+&# if (url, "^.+$")
+  <A HREF="&!url;" TARGET="_top">
+&# endif
+  <FONT COLOR="black">&!name;</FONT>
+&# if (url, "^.+$")
+</A>
+&# endif
+
+&& last_person
+&: Rappresenta l'ultima persona nella lista delle persone (si veda il tag
+&: <tag>first_person</tag>).
+&: <params>
+&:   <param name="url" value="URL associata al nome">
+&:   <param name="name" value="Nome della persona">
+&: </params>
+&# if (url, "^.+$")
+  <A HREF="&!url;" TARGET="_top">
+&# endif
+  <FONT COLOR="black">&!name;</FONT>
+&# if (url, "^.+$")
+</A>
+&# endif
+.<BR>
+
+&& last_person_free
+&: Equivale al tag <tag>last_person</tag> solo che permette di specificare
+&: del testo al posto del nome di una persona. &Egrave; stato utilizzato
+&: per generare la scritta <i>et al.</i> nella pagina di
+&: <a href="http://medialab.di.unipi.it/">Janet</a>.
+&: <params>
+&:   <param name="text" value="Testo da visualizzare.">
+&: </params>
+  &!text;
+  <BR>
+
+&& banner
+&: Banner di chiusura della pagina.
+&: <no_params>
+<table border="0" style="padding-left:8"
+ cellspacing=0 cellpadding=1 width="100%" bgcolor="#336699">
+ <tr>
+   <td>
+   <a href="http://www.di.unipi.it">
+   <font color="white" size="-1" face="Verdana, Sans-Serif"
+    style="text-decoration:none">
+    Dipartimento di Informatica, Pisa, Italy
+   </a>
+   </font>
+   </td>
+ </tr>
+</table>
+
+&& ftp_split
+&: Abilita lo splitter. Necessario solo sulla nostra ftp home page.
+&: <no_params>
+<script>
+<!-- Hide to non Javascript browsers
+  function split(src) {
+    document.forms.splitterform.file.value=src;
+    self.location = '#splitter';
+  }
+//-->
+</script>
+
+&& ftp_list
+&: Lista di file da scaricare. &Egrave; lo stile utilizzato nella pagina
+&: <a href="http://medialab.di.unipi.it/ftp">FTP</a> del Laboratorio.
+&: <params>
+&:   <param name="title" value="Titolo della sezione">
+&: </params>
+<H2>
+&# if (=lang, it)
+&!title_it:&!title;;</H2>
+&# if (=lang, en)
+&!title_en:&!title;;</H2>
+&# endif
+
+<div align="center"><center>
+<table border="0" width="90%">
+  <tr>
+&# if (split, no)
+&#= split = f
+&# if ! (split, no)
+&#= split = t
+    <td align="center" bgcolor="#000080"><font face="Arial" size="3" color="#FFFFFF"><strong><em>split</em>
+</strong></font></td>
+&# endif
+    <td align="center" bgcolor="#000080" nowrap><font face="Arial" size="3" color="#FFFFFF"><strong><em>download</em></strong></font></td>
+    <td align="center" bgcolor="#000080"><font face="Arial" size="3" color="#FFFFFF"><strong><em>
+&# if (=lang, it)
+descrizione</em>
+&# if (=lang, en)
+description</em>
+&# endif
+</strong></font></td>
+  </tr>
+
+&& /ftp_list
+&: Chiude il tag <tag>ftp_list</tag>.
+&: <no_params>
+</table>
+</center></div>
+
+&& ftp_entry
+&: Descrive una entry della lista ftp.
+&: <params>
+&:   <param name="file" value="Nome del file da scaricare">
+&: </params>
+  <tr>
+&# if (=split, t)
+    <td align="center" nowrap bgcolor="#00FFFF">
+    <a href="javascript:split('&!file;');">
+    <font face="Arial" size="2" style="text-decoration:none">split!</font></a>
+    <br><center><font face="Arial" size="2">
+&# exec du &!file; | awk '{ print $1; }'
+    Kb</font></center></td>
+&# endif
+    <td align="center" nowrap bgcolor="#00FFFF">
+    <a href="&!file;">
+    <font face="Arial" size="2">
+    &!file;
+    </font></a></td>
+    <td bgcolor="#00FFFF"><font face="Arial" size="2">
+
+&& /ftp_entry
+&: Chiude il tag <tag>ftp_entry</tag>
+&: <no_args>
+    </font></td>
+  </tr>
+
+&& new_ftp_entry
+&: Descrive una nuova entry della lista ftp.
+&: <params>
+&:   <param name="file" value="Nome del file da scaricare">
+&: </params>
+  <tr>
+&# if (=split, t)
+    <td align="center" nowrap bgcolor="#00FFFF">
+    <a href="javascript:split('&!file;');">
+    <font face="Arial" size="2" style="text-decoration:none">split!</font></a>
+    <br><center><font face="Arial" size="2">
+&# exec du &!file; | awk '{ print $1; }'
+    Kb</font></center></td>
+&# endif
+    <td align="center" nowrap bgcolor="#00FFFF">
+    <img src="/images/new.gif" width="28" height="11"><br>
+    <a href="&!file;">
+    <font face="Arial" size="2">
+    &!file;
+    </font></a></td>
+    <td bgcolor="#00FFFF"><font face="Arial" size="2">
+
+&& /new_ftp_entry
+&: Chiude il tag <tag>new_ftp_entry</tag>
+&: <no_args>
+    </font></td>
+  </tr>
+
+&& lang_a
+&: It is the same as the <tag>a</tag> tag but can handle the language
+&: if needed.
+&: <params>
+&:   <param name="href" value="Url of the anchor">
+&:   <param name="lang" value="If <code>yes</code> enable the language handling.">
+&:   <param name="target" value="If defined generates the target parameter for the <tag>a</tag> tag.
+&: </params>
+&# if !(lang, no)
+<a href="&!href;-&=lang;.html"
+&# if (lang, no)
+<a href="&!href;"
+&# endif
+&# if (target, ".+")
+target="&!target;"
+&# endif
+>
+
+&& /lang_a
+&: Close the <tag>lang_a</tag> tag.
+&: <no_params>
+</a>
+

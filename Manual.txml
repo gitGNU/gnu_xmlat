@@ -1,0 +1,104 @@
+<rem val="
+This document is the manual of the TXML system. You must compile it with TXML
+for a target language.
+">
+
+<man title="TXML Manual" author="Antonio Cisternino" rev="0.1" last-update="12/5/1999">
+<section>
+<section-title>Preface</section-title>
+<section-body>
+TXML is a compiler that replaces user defined tags contained in a document
+with an associate definition.
+<par>
+The original idea (in 1994) was to develop a software written in C called 
+RoboHTML that was capable of interpret scripts associated with user defined
+tags. The original idea has not be implemented but in September 1998 I have
+realized a Perl script that has become the actual TXML compiler. The main
+idea is the same: I want to define a tool that allow the user to automate
+the annoiyng tasks for those people that use a simple text editor to create
+their Web-Pages.
+<par>
+Now I'm experimenting with this tool in new situations like: usage as an
+intermediate language to easy change the output of a program, pattern
+programming, non general purpose text formatting language.
+<par>
+I wish to thank many people who have contributed to the TXML development.
+In particular <link web="http://omega.di.unipi.it/sja">Stefano J.
+Attardi</link> has suggested many changes and new features
+that have contributed to make the system more powerful and flexible.
+Also <link web="http://www.di.unipi.it/~simi">Maria Simi</link>
+have heavily contributed to the development of the system.
+Finally I wish to thank all the people that have contributed in some way to
+this software.
+</section-body>
+</section>
+<section>
+<section-title>Introduction</section-title>
+<section-body>
+TXML is a compiler that replaces user defined tags contained in a document
+with an associate definition.
+<par>
+The system is realized using the Perl language, thus it is portable and has 
+been successfully tested on many Unix and on Windows family. If the GNU make 
+utility is available also a simple source management system is offered by the
+tool.
+<par>
+This manual describes the TXML compiler and the automatic documentation 
+generator to be used to describe user defined tags. An introduction to the
+tool's philosophy and its possible uses it is also present.
+<par>
+The first section is devoted to describe SGML, XML and TXML to understand
+how TXML is related to the first two formalisms. In section two the compiler
+tool is described in detail: are described the syntax of the Data Definition
+Template and the way in which compiler works. Section three presents the 
+sxmldoc tool, a small tool that allow to automatically generate documentation
+of a DDT file starting from comments in a way very similar as javadoc does in
+the Sun's JDK environment. The installation on both Unix and Windows 
+platforms is described in section four. Finally section five report some
+example of use of TXML.
+</section-body>
+</section>
+<section>
+<section-title>SGML, XML and TXML</section-title>
+<section-body>
+This section explains how TXML is related to XML and SGML.
+<par>
+SGML is a metalanguage that allows to define a class of languages 
+called markup languages. Thus SGML is a generalized syntax for a class of 
+languages, the semantic of these languages depend from the meaning of the 
+tags used to mark the information. In SGML a <emp>tag</emp> is a portion
+of text delimited by <lt> and <gt>. The tag has a name (the header of
+the tag) and a series of parameters that have a name and a value. The tags
+can be used to mark all kind of information, and the meaning of a mark
+depends from the name of the tag used.
+<example>
+If we have defined the tag <emp>title</emp> to mark the start and the tag 
+<emp>/title<emp> to mark the end of the title text in a document we can
+mark the title text as:
+<blank-line>
+<lt>title<gt>This is the title of the document<lt>/title<gt> and this is
+not part of the title.
+</example>
+HTML is an example of a language defined using SGML standard syntax. A
+certain number of tag names was defined to mark documents with images.
+The main idea was that the author of the document put the appropriate
+tags on the text to describe the role played by the various portions of the
+text in the document. The rendering of the document is made by an appropriate
+program that knows the meaning of the used tags and generates a document
+exploiting the information carried out by the tags. Thus the original
+HTML defines tags such as <emp>h1</emp> (h1 stands for heading of level 1) that
+mean: the text that follows this tag is an heading of the document.
+<par>
+Because HTML was originally defined to easy specify scientific papers and
+to help the information exchange in the scientific community the text
+formatting it is not the only feature of HTML. The possibility of marking
+a part of text as <emp>related</emp> with another document is the major
+reason of the success of the language. Marking a part of text with an anchor
+(tag <emp>A</emp>) allow the renderer to make the text displayed sensible:
+when it is selected by the user the renderer loads the linked document.
+This feature allows paper's authors to link the document reported in the
+bibliography.
+<par>
+</section-body>
+</section>
+</man>

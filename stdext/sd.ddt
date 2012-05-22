@@ -1,0 +1,157 @@
+&& sd-doc
+<HTML>
+<HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <meta name="language" content="it">
+   <meta name="robots" content="index,follow">
+<TITLE>&!title:;</TITLE>
+<style><!--a {text-decoration: none;}--></style>
+</HEAD>
+
+&# if !(margin, yes)
+<BODY TEXT="#000066" BGCOLOR="#ffffff" LINK="#000066" vLINK="#9933CC" ALINK="#000066" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+&# if (margin, yes)
+<BODY TEXT="#000066" BGCOLOR="#ffffff" LINK="#000066" vLINK="#9933CC" ALINK="#000066">
+&# endif
+
+&# if (font, yes)
+<font face="Verdana, Arial, sans-serif" color="#000066" size="-1">
+&# endif
+
+&& /sd-doc
+</BODY>
+</HTML>
+
+&& sections
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+
+&& /sections
+</table>
+
+&& section
+&#= base-color = &!base-color:#448888;
+<tr>
+<td width="90%" colspan="2" align="left" height="70"  bgcolor="&!base-color:#448888;">
+<font face="Verdana, Arial, sans-serif" color="&!title-color:#aaeedd;" size="+3">
+&!title:;</font>
+</td>
+&# if (homeref, .)
+<td align="center" width="10%" bgcolor="&!side-color:#115555;"><a href="&!homeref;"><font face="Verdana, Arial, sans-serif" color="&!homeref-color:#ffff00;" size="-1">&!home-text:Home;</font></a></td>
+&# if ! (homeref, .)
+<td width="10%" bgcolor="&!side-color:#115555;">&nbsp;</td>
+&# endif
+</tr>
+
+&& /section
+<!-- Fine della sezione -->
+
+&& section-row
+<tr>
+&# if (margin, no)
+<td width="90%" colspan="2" valign="top" align="left"
+&# if !(margin, no)
+<td width="10%" >&nbsp;</td>
+<td width="80%"
+&# endif
+
+&# if (height, .)
+ height="&!height;">
+&# if !(height, .)
+>
+&# endif
+
+<font face="Verdana, Arial, sans-serif" size="-1">
+
+&& /section-row
+</font></td>
+<td width="10%" bgcolor="&=base-color;" height="30">&nbsp;</td>
+</tr>
+
+&& avviso
+<a href="&!href:index.html;">
+<font color="&!color:#000066;">
+
+&& /avviso
+</font>
+</a>
+<BR>
+
+&& corsi
+<a href="corsi/&!href:index.html;">
+<font color="&!color:#000066;">
+
+&& /corsi
+</font>
+</a>
+
+&& regolamenti
+<a href="regolamenti/&!href:index.html;">
+<font color="&!color:#000066;">
+
+&& /regolamenti
+</font>
+</a>
+
+&& delibere
+<a href="regolamenti/delibere/&!href:index.html;">
+<font color="&!color:#000066;">
+
+&& /delibere
+</font>
+</a>
+
+&& calendario
+<a href="calendario/&!href:index.html;">
+<font color="&!color:#000066;">
+
+&& /calendario
+</font>
+</a>
+
+&& statistiche
+<a href="statistiche/&!href:index.html;">
+<font color="&!color:#000066;">
+
+&& /statistiche
+</font>
+</a>
+
+&& sd-footer
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td width="30%" bgcolor="#448888">&nbsp;</td>
+<td width="60%" bgcolor="#448888">
+<font face="Verdana, Arial, sans-serif" color="#aaeedd" size="-1">
+&nbsp;
+<BR>
+informazioni:</font>
+<A HREF="mailto: rosie@di.unipi.it">
+<font face="Verdana, Arial, sans-serif" color="#ffff00" size="-1">
+segreteria didattica</font></A>
+
+<font face="Verdana, Arial, sans-serif" color="#aaeedd" size="-1">
+<BR><SCRIPT>
+<!--
+document.writeln('ultima modifica: ' + document.lastModified);
+//-->
+</SCRIPT>
+<br>
+<font face="Verdana, Arial, sans-serif" color="#aaeedd" size="-1">
+Progetto R.O.S.I.</font>
+</td>
+<td bgcolor="#77bbaa" width="10%">&nbsp;</td></tr>
+
+</table>
+
+&& lista-delibere
+<!-- Inizio lista delle delibere -->
+
+&& /lista-delibere
+<!-- Fine lista delibere -->
+
+&& delibera
+<a href="&!href;">
+
+&& /delibera
+</a><br>

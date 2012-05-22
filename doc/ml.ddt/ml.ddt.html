@@ -1,0 +1,305 @@
+<html>
+<head>
+  <meta name="author" value="pgfilterdoc">
+  <title>Tag description</title>
+</head>
+<body>
+<dl>
+</dd>
+
+<a name="under_construction"><dt><b>under_construction</b></dt></a>
+<dd>
+   Generates some text that means that the page is under construction.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="people_list"><dt><b>people_list</b></dt></a>
+<dd>
+   Inizia una lista di persone come nella pagina dei componenti del
+   <a href="http://medialab.di.unipi.it/people.html">laboratorio</a>.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="/people_list"><dt><b>/people_list</b></dt></a>
+<dd>
+   Chiude il tag <code>&lt;people_list&gt;</code>.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="people_el"><dt><b>people_el</b></dt></a>
+<dd>
+   Rappresenta il riferimento ad una persona in una <code>&lt;people_list&gt;</code>.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>mail:</i></dt><dd>Indirizzo E-Mail della persona<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>name:</i></dt><dd>Nome della persona<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="project_name"><dt><b>project_name</b></dt></a>
+<dd>
+   Da precedere al nome del progetto. Serve a settare gli stili e il link
+   per tornare alla pagina principale del progetto.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>url:</i></dt><dd>URL a cui saltare quando viene cliccato sul                               titolo. Usare la home page del progetto.<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="/project_name"><dt><b>/project_name</b></dt></a>
+<dd>
+   Chiude il tag &gt;</code>project_name&gt;</code>
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="ml_title"><dt><b>ml_title</b></dt></a>
+<dd>
+   Stile relativo al titolo del laboratorio multimediale.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="/ml_title"><dt><b>/ml_title</b></dt></a>
+<dd>
+   Chiude lo stile <code>&lt;ml_title&gt;</code>.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="ml_body"><dt><b>ml_body</b></dt></a>
+<dd>
+   Body del documento del laboratorio multimediale.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="/ml_body"><dt><b>/ml_body</b></dt></a>
+<dd>
+   Chiude il body del documento.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="standard_header"><dt><b>standard_header</b></dt></a>
+<dd>
+   Header standard di un documento. Da includere tra <code>&lt;head&gt;</code> e
+   <code>&lt;/head&gt;</code>. Prepara il content type, l'autore, l'e-mail e il titolo
+   di una pagina.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>author:</i></dt><dd>Autore del documento<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>mail:</i></dt><dd>E-Mail dell'autore<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>title:</i></dt><dd>Titolo del documento<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="header"><dt><b>header</b></dt></a>
+<dd>
+   Definisce l'intestazione di una pagina del Laboratorio Multimediale.
+   L'intestazione &egrave; composta da:<p>
+   <code>&lt;header&gt;</code><br>
+   Page title<br>
+   <code>&lt;navbar&gt;</code><br>
+   Definizione dei bottoni usando i tag <code>&lt;button&gt;</code> e 
+   <code>&lt;defbutton&gt;</code>.<br>
+   <code>&lt;/navbar&gt;</code><br>
+   <code>&lt;/header&gt;</code><br>
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="navbar"><dt><b>navbar</b></dt></a>
+<dd>
+   Definisce la barra di navigazione della pagina.<p>
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="defbutton"><dt><b>defbutton</b></dt></a>
+<dd>
+   Introduce il bottone di default della barra (quello selezionato).
+   Per consistenza si consiglia di utilizzarne solo uno per barra.<p>
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>width:</i></dt><dd>Dimensione del tasto (si consiglia 100% / n.tasti)<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>url:</i></dt><dd>URL a cui saltare se premuto<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>name:</i></dt><dd>Stringa da visualizzare sul bottone<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="button"><dt><b>button</b></dt></a>
+<dd>
+   Introduce un bottone nella barra.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>width:</i></dt><dd>Dimensione del tasto (si consiglia 100% / n.tasti)<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>url:</i></dt><dd>URL a cui saltare se premuto<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>name:</i></dt><dd>Stringa da visualizzare sul bottone<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="navbut"><dt><b>navbut</b></dt></a>
+<dd>
+</dd>
+
+<a name="/navbut"><dt><b>/navbut</b></dt></a>
+<dd>
+</dd>
+
+<a name="/navbar"><dt><b>/navbar</b></dt></a>
+<dd>
+   Chiude la barra di navigazione.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="/header"><dt><b>/header</b></dt></a>
+<dd>
+   Chiude l'intestazione di una pagina.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="img_list"><dt><b>img_list</b></dt></a>
+<dd>
+   Lista i cui punti sono immagini. Un esempio di uso della lista si pu&ograve;
+   trovare nella prima pagina di <a href="http://medialab.di.unipi.it/">Janet</a>.
+   Ogni elemento &egrave; costituito da un immagine con a fianco un titolo e
+   un testo sottostante. Si veda il tag <code>&lt;img_element&gt;</code> per vedere come
+   descrivere ogni riga. Nella prima pagina si usano anche i tag <i>person</i>
+   per descrivere le persone che afferiscono ad un progetto.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="/img_list"><dt><b>/img_list</b></dt></a>
+<dd>
+   Chiude il tag <code>&lt;img_list&gt;</code>.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="img_element"><dt><b>img_element</b></dt></a>
+<dd>
+   Elemento di una lista di immagini (si faccia riferimento al tag 
+   <code>&lt;img_list&gt;</code>). Un elemento di immmagine si compone di un'immagine
+   al cui fianco si trova un titolo e del testo. Al titolo e all'immagine
+   sono associate delle URL.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>img_url:</i></dt><dd>URL a cui andare quando viene selezionata                                    l'immagine.<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>img_src:</i></dt><dd>URL contenente l'immagine.                                    Es. /images/compass.gif<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>img_width:</i></dt><dd>Larghezza dell'immagine.<br><b>Default:</b> 96</dd></dl></dd>
+     <dd><dl><dt><i>img_height:</i></dt><dd>Altezza dell'immagine.<br><b>Default:</b> 96</dd></dl></dd>
+     <dd><dl><dt><i>txt_url:</i></dt><dd>URL a cui andare quando viene selezionato il                                   testo.<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>txt_value:</i></dt><dd>Testo da visualizzare (titolo).<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="/img_element"><dt><b>/img_element</b></dt></a>
+<dd>
+   Chiude il tag <code>&lt;img_element&gt;</code>.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="first_person"><dt><b>first_person</b></dt></a>
+<dd>
+   Prima persona riferimento di un progetto. Questo tag &egrave; stato
+   utilizzato nella prima pagina di 
+   <a href="http://medialab.di.unipi.it/">Janet</a> e visualizza la scritta
+   <i>di</i> <i>Nome persona</i> dove il nome della persona &egrave;
+   la prima della lista ed &egrave; cliccabile.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>url:</i></dt><dd>URL associata al nome<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>name:</i></dt><dd>Nome della persona<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="person"><dt><b>person</b></dt></a>
+<dd>
+   Rappresenta una persona nella lista delle persone (si veda il tag
+   <code>&lt;first_person&gt;</code>).
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>url:</i></dt><dd>URL associata al nome<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>name:</i></dt><dd>Nome della persona<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="last_person"><dt><b>last_person</b></dt></a>
+<dd>
+   Rappresenta l'ultima persona nella lista delle persone (si veda il tag
+   <code>&lt;first_person&gt;</code>).
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>url:</i></dt><dd>URL associata al nome<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>name:</i></dt><dd>Nome della persona<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="last_person_free"><dt><b>last_person_free</b></dt></a>
+<dd>
+   Equivale al tag <code>&lt;last_person&gt;</code> solo che permette di specificare
+   del testo al posto del nome di una persona. &Egrave; stato utilizzato
+   per generare la scritta <i>et al.</i> nella pagina di
+   <a href="http://medialab.di.unipi.it/">Janet</a>.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>text:</i></dt><dd>Testo da visualizzare.<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="banner"><dt><b>banner</b></dt></a>
+<dd>
+   Banner di chiusura della pagina.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="ftp_split"><dt><b>ftp_split</b></dt></a>
+<dd>
+   Abilita lo splitter. Necessario solo sulla nostra ftp home page.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="ftp_list"><dt><b>ftp_list</b></dt></a>
+<dd>
+   Lista di file da scaricare. &Egrave; lo stile utilizzato nella pagina
+   <a href="http://medialab.di.unipi.it/ftp">FTP</a> del Laboratorio.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>title:</i></dt><dd>Titolo della sezione<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="/ftp_list"><dt><b>/ftp_list</b></dt></a>
+<dd>
+   Chiude il tag <code>&lt;ftp_list&gt;</code>.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dd>
+
+<a name="ftp_entry"><dt><b>ftp_entry</b></dt></a>
+<dd>
+   Descrive una entry della lista ftp.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>file:</i></dt><dd>Nome del file da scaricare<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="/ftp_entry"><dt><b>/ftp_entry</b></dt></a>
+<dd>
+   Chiude il tag <code>&lt;ftp_entry&gt;</code>
+   <no_args>
+</dd>
+
+<a name="new_ftp_entry"><dt><b>new_ftp_entry</b></dt></a>
+<dd>
+   Descrive una nuova entry della lista ftp.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>file:</i></dt><dd>Nome del file da scaricare<br><b>Default:</b> None.</dd></dl></dd>
+   </dl>
+</dd>
+
+<a name="/new_ftp_entry"><dt><b>/new_ftp_entry</b></dt></a>
+<dd>
+   Chiude il tag <code>&lt;new_ftp_entry&gt;</code>
+   <no_args>
+</dd>
+
+<a name="lang_a"><dt><b>lang_a</b></dt></a>
+<dd>
+   It is the same as the <code>&lt;a&gt;</code> tag but can handle the language
+   if needed.
+   <p><dl><b>Parameters:</b>
+     <dd><dl><dt><i>href:</i></dt><dd>Url of the anchor<br><b>Default:</b> None.</dd></dl></dd>
+     <dd><dl><dt><i>lang:</i></dt><dd>"If<br><b>Default:</b> None.</dd></dl></dd>yes</code> enable the language handling.">
+     <dd><dl><dt><i>target:</i></dt><dd>"If<br><b>Default:</b> None.</dd></dl></dd>a&gt;</code> tag.
+   </dl>
+</dd>
+
+<a name="/lang_a"><dt><b>/lang_a</b></dt></a>
+<dd>
+   Close the <code>&lt;lang_a&gt;</code> tag.
+   <p><dl><b>Parameters:</b><dd>None.</dd></dl>
+</dl>
+</body>
+</html>

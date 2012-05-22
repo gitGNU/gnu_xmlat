@@ -1,0 +1,88 @@
+# -*-perl-*-
+
+##  Copyright (C) 2000, 2012
+ 
+ # templatereader
+ # Author: Antonio Cisternino
+ # Current Maintainer: NalaGinrut<mulei@gnu.org>
+ 
+ #  XmlAT is free software: you can redistribute it and/or modify
+ #  it under the terms of the GNU General Public License as published by
+ #  the Free Software Foundation, either version 3 of the License, or
+ #  (at your option) any later version.
+ 
+ #  XmlAT is distributed in the hope that it will be useful,
+ #  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ #  GNU General Public License for more details.
+ 
+ #  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+use FileHandle;
+
+# This subroutine reads the template from the file
+sub readTemplate {
+    my $fileName = shift;
+
+    return if (exists $templates{$fileName});
+
+    readOriginalTemplate($fileName);
+}
+
+# This subroutine reads the template from the file in the original format
+sub readOriginalTemplate {
+  my $fileName = shift;
+  my $tagin = new FileHandle;
+
+  $templates{$fileName} = $fileName;
+
+  my $separator = $/;
+  $/ = "\n";
+
+  open($tagin, "<$fileName") or die "Template file '$fileName' not found!\n";
+
+  my $currTag = "";
+  my $currArrRef = [];
+  my $line = "";
+
+  while (<$tagin>) {
+      if (/^\s*\&\&\s*(\/?[\w\-]+)/) {
+	  $line = "";
+	  
+	  # Eliminates trailing blanks lines
+	  while (($#$currArrRef > -1) && $line =~ /^\s*$/) {
+	      $line = pop @$currArrRef;
+	  }
+
+	  chomp $line;
+	  push @$currArrRef, $line;
+
+	  # Saves the lines associated with this tag
+	  $tags{$currTag} = $currArrRef if ($currTag);
+	  $currArrRef = [];
+	  $currTag = uc $1;
+      } elsif (parseDirective($_)) {
+	  #skip ***
+      } elsif ($_ !~ /^\s*\&\:/) {
+	  push @$currArrRef, $_;
+      }
+  }
+
+  $line = "";
+
+  # Eliminates trailing blanks lines
+  while (($#$currArrRef > -1) && $line =~ /^\s*$/) {
+    $line = pop @$currArrRef;
+  }
+
+  chomp $line;
+  push @$currArrRef, $line;
+
+  # Saves the lines associated with this tag
+  $tags{$currTag} = $currArrRef if ($currTag);
+
+  close($tagin);
+
+  $/ = $separator;
+}

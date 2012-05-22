@@ -1,0 +1,95 @@
+#!/usr/local/bin/perl5
+
+##  Copyright (C) 2000, 2012
+ 
+ # pgfilterdoc
+ # Author: Antonio Cisternino
+ # Current Maintainer: NalaGinrut<mulei@gnu.org>
+ 
+ #  XmlAT is free software: you can redistribute it and/or modify
+ #  it under the terms of the GNU General Public License as published by
+ #  the Free Software Foundation, either version 3 of the License, or
+ #  (at your option) any later version.
+ 
+ #  XmlAT is distributed in the hope that it will be useful,
+ #  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ #  GNU General Public License for more details.
+ 
+ #  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+my $home = ".";
+my $prgname;
+
+$0 =~ /(.*?)\/?([^\/]*)$/;
+$home = $1 if ($1);
+$prgname = $2;
+
+$template = "doc.ddt";
+
+die "Usage: $prgname <file name>\n" if ($#ARGV);
+
+$srcname = $ARGV[0];
+
+print "Srcname is $srcname\n";
+$srcname =~ /([^\/\s]*)\s*$/;
+$tname = $1;
+
+$docname = "$tname.html";
+
+open(IN, "<$srcname") or die "Cannot open '$srcname[0]'!\n\n";
+open(OUT, ">.$tname.xml") or die "Cannot create .$tname.xml!\n\n";
+
+print OUT "<doc_page>\n";
+
+$currTag = "";
+@tags = ();
+
+while (<IN>) {
+    if (/^\&\&\s*(\/?\w+)/) {
+	$currTag = $1;
+        push @tags, $currTag unless($first);
+	print OUT "</doc_tag>\n\n";
+	print OUT "<doc_tag name=\"$currTag\">\n";
+    } elsif (/^\&\:(.*)$/) {
+	print OUT "  $1\n";
+    }
+}
+
+print OUT "</doc_page>\n";
+
+close(IN);
+close(OUT);
+
+open(OUT, ">.pgidx.xml") or die "Cannot create '.pgidx.xml'!\n\n";
+
+print OUT "<doc_idx>\n";
+
+foreach $elem (sort @tags) {
+    print OUT "  <idx_el docname=\"$docname\" name=\"$elem\">\n";
+}
+
+print OUT "</doc_idx>\n";
+close(OUT);
+
+system "perl $home/sxmlc -template LIB/$template .$tname.xml $docname";
+system "perl $home/sxmlc -template LIB/$template .pgidx.xml doc-idx.html";
+
+unlink ".$tname.xml";
+unlink ".pgidx.xml";
+
+open (OUT, ">doc.html");
+
+print OUT "<html>
+<head>
+<title>Documentation of the template file $tname</title>
+<frameset cols=\"200,*\">
+  <frame src=\"doc-idx.html\">
+  <frame name=\"doc\" src=\"$docname\">
+</frameset>
+</head>
+</html>
+";
+
+close(OUT);

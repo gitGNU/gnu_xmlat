@@ -1,0 +1,219 @@
+# -*-perl-*-
+##  Copyright (C) 2000, 2012
+ 
+ # Author: Antonio Cisternino
+ # Current Maintainer: NalaGinrut<mulei@gnu.org>
+ 
+ #  XmlAT is free software: you can redistribute it and/or modify
+ #  it under the terms of the GNU General Public License as published by
+ #  the Free Software Foundation, either version 3 of the License, or
+ #  (at your option) any later version.
+ 
+ #  XmlAT is distributed in the hope that it will be useful,
+ #  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ #  GNU General Public License for more details.
+ 
+ #  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# This subroutine generate the makefile
+sub genMakefile {
+    my $make;
+
+    if ($^O =~ /MSWin32/) {
+	$make = "make -v > NUL";
+    } else {
+	$make = "make -v > /dev/null";
+    }
+
+    die "The make seems not work properly...\nTo use this feature the make must be in the PATH.\n"if (system "$make");
+
+    my $srcext = ".sxml";
+    my $tgtext = ".html";
+    my $dest = ".";
+
+    print "\nMakefile generation\n\n";
+
+    print "\nDestination directory [$dest]?\n";
+    $_ = <STDIN>;
+    chomp;
+    $dest = $_ if (/\S/);
+
+    print "\nSource extension [$srcext]?\n";
+    $_ = <STDIN>;
+    chomp;
+    if (/\S/) {
+	# Adjust the dot if necessary
+	s/^([^\.])/\.$1/;
+	$srcext = $_;
+    }
+
+    print "\nTarget extension [$tgtext]?\n";
+    $_ = <STDIN>;
+    chomp;
+    if (/\S/) {
+	# Adjust the dot if necessary
+	s/^([^\.])/\.$1/;
+	$tgtext = $_;
+    }
+
+    my $templates = "";
+    my $tempdep = "";
+    my @templang;
+
+    print "\nLibrary templates\n\n";
+    do {
+	print "Library template name [RET to end]?\n";
+	$_ = <STDIN>;
+	chomp;
+	$templates .= " -t LIB/$_" if (/\S/);
+	$tempdep .= " $home/stdlib/$_" if (/\S/);
+    } while (/\S/);
+
+    print "\nStandard extensions templates\n\n";
+    do {
+	print "Standard template name [RET to end]?\n";
+	$_ = <STDIN>;
+	chomp;
+	$templates .= " -t EXT/$_" if (/\S/);
+	$tempdep .= " $home/stdext/$_" if (/\S/);
+    } while (/\S/);
+
+    print "\nAdditional templates (absolute path suggested)\n\n";
+    do {
+	print "Template name [RET to end]?\n";
+	$_ = <STDIN>;
+	chomp;
+	$templates .= " -t $_" if (/\S/);
+	$tempdep .= " $_" if (/\S/);
+    } while (/\S/);
+
+    print "\nLanguages (if none selected this feature is disabled)\n\n";
+    do {
+	print "Language (it, en, fr, ...) [RET to end]?\n";
+	$_ = <STDIN>;
+	chomp;
+	push @templang, $_ if (/\S/);
+    } while (/\S/);
+    
+    if (($#templang >= 0) && ($templates !~ /LIB\/lang\.ddt/i)) {
+	$templates .= " -t LIB/lang.ddt";
+	$tempdep .= " $home/stdlib/lang.ddt";
+    }
+
+    open(OUT, ">Makefile");
+
+    print OUT "
+.PHONY: thisdir all clean
+
+PERL = $^X
+
+SXMLC = \$(PERL) $0
+XMLTEMPLATE=$templates
+DEST = $dest
+
+";
+    if ($#templang < 0) {
+        print OUT "OBJS = \$(addprefix \$(DEST)/,\$(addsuffix $tgtext,\$(basename \$(wildcard *$srcext))))";
+    } else {
+        my $lang;
+        foreach $lang (@templang) {
+            print OUT "OBJS" . uc($lang) . " = \$(addprefix \$(DEST)/,\$(addsuffix $tgtext.$lang,\$(basename \$(wildcard *$srcext))))
+";
+        }
+    }
+
+    print OUT "
+
+.SUFFIXES: $srcext $tgtext
+
+thisdir: \$(DEST) ";
+
+    if ($#templang < 0) {
+        print OUT "\$(OBJS)";
+    } else {
+        my $lang;
+        foreach $lang (@templang) {
+            print OUT "\$(OBJS" . uc($lang) . ") ";
+        }
+    }
+
+    print OUT "
+
+\$(DEST):
+	sh -c 'if [ ! -d \$(DEST) ]; then mkdir \$(DEST); fi'
+
+all:
+	make
+	\$(PERL) $home/dirs
+
+clean:
+	rm ";
+
+    if ($#templang < 0) {
+        print OUT "\$(DEST)/*$tgtext";
+    } else {
+        my $lang;
+        foreach $lang (@templang) {
+            print OUT "\$(DEST)/*$tgtext.$lang ";
+        }
+    }
+
+    if ($#templang < 0) {
+        print OUT "
+
+\$(DEST)/%$tgtext: %$srcext $tempdep
+	\$(SXMLC) \$(XMLTEMPLATE) \$< \$\@";
+    } else {
+        my $lang;
+        foreach $lang (@templang) {
+        print OUT "
+
+\$(DEST)/%$tgtext.$lang: %$srcext $tempdep
+	\$(SXMLC) \$(XMLTEMPLATE) -c lang=$lang \$< \$\@";
+        }
+    }
+
+    print OUT "
+
+%:
+	make ";
+
+    if ($#templang < 0) {
+        print OUT "\$\@$tgtext";
+    } else {
+        my $lang;
+        foreach $lang (@templang) {
+            print OUT "\$\@$tgtext.$lang ";
+        }
+    }
+
+    print OUT "
+";
+
+    close(OUT);
+
+    if ($^O =~ /MSWin32/) {
+        if (system "cscript > NUL") { # No Windows Scripting Host!
+            open(OUT, ">Build.bat");
+            print OUT "\@ECHO OFF\nmake\n";
+            close(OUT);
+            open(OUT, ">BuildAll.bat");
+            print OUT "\@ECHO OFF\nmake all\n";
+        } else {
+            open(OUT, ">Build.js");
+            print OUT "
+WshShell = WScript.CreateObject(\"Wscript.shell\");
+WshShell.Run(\"make\");
+";
+            close(OUT);
+            open(OUT, ">BuildAll.js");
+            print OUT "
+WshShell = WScript.CreateObject(\"Wscript.shell\");
+WshShell.Run(\"make all\");
+";
+        }
+        close(OUT);
+    }
+}

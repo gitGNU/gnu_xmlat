@@ -1,0 +1,300 @@
+22/5/2012: Mu Lei become the maintainer. And change SXML to XmlAT.
+	   *.sxml renamed to *.txml which stands for template-xml. 
+	   And perl-guile was removed. Because we'll reimplemente XmlAT with Guile.
+
+11/4/2000: The ifeval directive has been added
+
+14/2/2000: The version 0.96 has been released
+
+14/2/2000: Now also the <? ?> tag and the <... /> tag are
+           supported. SXML accepts XML syntax files. The only
+           exception is the support for [[ syntax.
+
+6/6/1999: The version 0.95 has been released
+
+6/6/1999: The comments <!-- ... --> are ignored in the SXML file. To insert
+	  in the target document a comment of this kind it is possible to
+	  define a tag
+
+	  && rem
+	  <!-- &!val; -->
+
+  	  because the ddt is not filtered for these comments.
+
+6/6/1999: The makefile generation has been revised to improve the
+	  generated code. The destination directory is now created
+	  if does not exists.
+
+29/5/1999: The main file has been splitted into several files.
+	   Files are makegen, templatereader.
+
+28/5/1999: Version 0.94 has been released
+
+28/5/1999: The support for Guile has been added. Now to use guile
+	   it is possible to put the
+
+	   &# guile
+
+	   directive in a DDT. To eval a definition (no output) you can
+	   use 
+
+	   &# gdefine <form>
+
+           To evalutate a form with output you can use
+
+	   &# geval <form>
+
+	   where <form> are scheme forms.
+	   The guile.pl helper has been added to support the link
+	   between SXML and guile.
+
+25/5/1999: The msword.ddt has been added in the stdext directory. It
+	   defines only the tag font and eliminates the face attribute
+	   for changing the overall font face of a document obtained
+ 	   starting from Word 97.
+
+25/5/1999: The &# taginclude directive has been added: allow to include
+	   a SXML template only if a tag has been used in a document.
+
+23/5/1999: Version 0.93 has been released
+
+23/5/1999: Bugfix: if a parame value contains & the variable expander will
+	   fail. Now the variable expander substitutes all '&' of the
+	   param values with #|amp|# and ';' with #|pv|#. Thus these sequences
+           are reserved and cannot be used within parameters.
+
+23/5/1999: The &# texton directive use now a different variable than
+	   the &#if directive. Thus within an if the text generation
+	   may be disabled until a new &#texton directive has been found.
+	   The lang.ddt has been updated using this new semantics.
+
+23/5/1999: Bug fix: now the constant definitions are evaluatet at compile
+	   time only if they not contain variables (&! or &=) and are not
+	   within an if block.
+
+23/5/1999: Added the recursive compilation to make. Now the generated
+	   makefile have the option 'all' that means "Build this
+	   directory and all the subdirectories". To implement this
+	   option the helper dirs in the distribution has been added.
+
+19/5/1999: Bug fix in the exec feature. For source safe ([^\r\n]*) is used instead
+           of (.*) to match the command.
+
+17/5/1999: Version 0.92 has been released.
+
+17/5/1999: Now the Makefile support multiple languages in a way that
+           it is compatible with Multiviewes offered by Apache Web Server.
+
+17/5/1999: The Makefile generated now contains the clean option to
+	   clean target files.
+
+17/5/1999: Bug fix in the eval of the constants. Now the value assigned
+	   to a constant is expanded with parameters like any other line.
+
+17/5/1999: Bug fix in the eval of the if directive.
+
+17/5/1999: Bug fix in the "else" implementation.
+
+9/5/1999: Added the else directive.
+
+9/5/1999: Added the htmlspaces and prettyformat options. With htmlspaces (-s on
+	  command line) sxmlc substitutes all [\s\n]* with a single space. The
+	  option may be useful to control languages such RTF.
+          The prettyformat option (-p on command line) enable sxmlc to 
+	  eliminate the \n that comes immediately after one tag end. Thus
+
+	  <a href="...">
+	  link</a>
+
+	  is filtered to
+
+	  <a href="...">link</a>
+
+	  Also the htmlspaces and prettyformat directives have been added
+          with &# syntax (htmlspaceson, htmlspacesoff and so on) in the ddt 
+	  file and with the <!...> syntax in the source file.
+
+9/5/1999: The version 0.91 has been released
+
+2/5/1999: Added the &# subst directive. This directive allow to elaborate
+          a parameter passed to a tag. You can do for example:
+
+	  &# subst msg/i/o/g
+
+          you will obtain that the value of the parameter msg changes
+	  all the occurences of the letter 'i' with the letter 'o'.
+	  If the trailing 'g' is omitted only the first occourrence is
+	  changed.
+	  This directive is useful to do some preprocessing of the
+          value passed to a parameter. For example to quote all the
+	  "'" occourrencies to pass a correct string to javascript.
+
+2/5/1999: Now the generated makefile check also the dependencies of
+	  the templates.
+
+2/5/1999: bug fix: the generation of the makefile was wrong
+
+11/4/1999: The release 0.9 is shipped.
+
+11/4/1999: Introduced the switch -m. Now SXML may generate a Makefile if the
+           make is present in the PATH.
+
+21/3/1999: The release 0.81 is shipped.
+
+21/3/1999: Bug fix: the exec directive is now executed only if
+	   the produced text is generated.
+
+13/3/1999: The release 0.8 is shipped.
+
+13/3/1999: Now the variable may be nested. The evaluation of a nested
+	   definition is expanded starting from inside variables.
+	   Thus you can define
+
+	   &!color:&!val;;
+
+	   and the interpreter first expand &!val; and then evaluate
+	   the new definition. In this way it is also possible to
+	   use constants if possible:
+
+	   &=&!color;:&!color:#ffffff;;
+
+	   If color is defined and is the name of a constant the &= is
+	   evaluated as a constant. Otherwise the default value is
+	   assumed.
+
+10/3/1999: The exec directive was introduced in the ddt file with the
+           the sytax &# exec <cmd>
+
+30/1/99: Updated the sxmldoc script. Now works properly and generates
+	 the documentation for a ddt file.
+
+5/1/1999: Shipped the 0.7 release
+
+5/1/1999: Fixed a bug: now the parameters can be on multiple lines
+
+5/1/1999: Added the support for quoting in the parameters of a tag.
+           The quote char is \
+
+7/12/98: Now handle the case
+             &#= k = &!v:def;
+
+7/12/98: Added the possibility to include '-' in the tag names
+
+7/12/98: Now the script works properly also on Windows95/98.
+         Use the EXT/ and the LIB/ prefixes rather than EXT\ or LIB\
+
+3/11/98: Fixed a bug that makes the script not working on Linux.
+
+17/9/98: Removed the elimination of \n after a tag closure.
+
+15/9/98: Bug fix: Also in templates if a line ends with '>' the new line
+         is removed.
+
+15/9/98: The switch -t of the command line now accepts the EXT/ and the LIB/
+         file prefixes that means respectvely HOME/stdext and HOME/stdlib
+         where HOME stands for the directory where the executable is stored.
+
+14/9/98: The constants becomes global variables because are evaluated
+         every time that a tag expansion occours. These variables are
+         initialized whend the ddt fil is read.
+
+14/9/98: Bug fix: the if now ignore all lines other than &endif and &if.
+
+14/9/98: Bug fix: a constant now can be a default value for a param.
+
+13/9/98: New line after tag control added. If a new line follows
+         a tag it is removed. If the space is required use a space
+         after the tag and then the new line. In this way it is
+         possible to write more readable XML controlling the output
+         format.
+
+13/9/98: Added the EXT/ and the LIB/ prefix to the #include <*> directive
+         EXT stands for extension directory and LIB for library directory
+
+13/9/98: Added the 'lib' and the 'ext' parameters to the <!template>
+         directive. The first search the template file starting from
+         the HOME/stdlib directory (where HOME is the directory of the
+         script). The second starts the search from the HOME/stdext dir.
+
+13/9/98: Added the extended support for the command line. Now are
+         supported multiple switches. FINIRE
+
+12/9/98: Added the <!exec> directive that allow to insert in the
+         document the result of the execution of a command. The syntax
+         for the directive is
+
+          <!exec cmd=...>
+
+12/9/98: Added the endif directive that closes an if directive. The
+         syntax is:
+
+          &endif
+
+12/9/98: Added the conditional directive in the definition file. The
+         syntax of the directive is:
+
+          &if [!] ([=]vname, ["]match["])
+
+         The characters inside square brackets are optional. The semantics
+         of the directive is the following:
+
+         if the parameter or constant (if specified '=') value of the
+         variable vname matches the pattern match (using the standard
+         perlre) the generation of text is turned on. If '!' is specified
+         the if guard is complemented.
+
+12/9/98: Added the tags
+
+          <!texton>
+          <!textoff>
+
+         that can be included in the .xml document and behave like
+         &texton and &textoff directives.
+
+12/9/98: Added the
+
+          &texton
+          &textoff
+
+         directives. These directives allows the user to stop
+         the text generation for part of a document. These directives
+         are evaluated for each tag expansion rather only once like
+         constants.
+
+12/9/98: Added the &#= directive that allows the user to define constants
+         directly in the definition file. The syntax for the directive
+         is
+
+         &#= name = value
+
+         value can be quoted or not like HTML parameters.
+
+12/9/98: Changed the directive <template> in <!template>
+
+12/9/98: Added the possibility of define constants using the syntax
+
+         <!constant name="Name" value="Val">
+
+         To insert a constant value in the definition file use the syntax
+
+         &=ConstantName;
+
+12/9/98: Shipped the release 0.6
+
+11/9/98: Added the aliasing of defaults. If a parameter is absent can
+         be replaced by a default value with the syntax &!par:default;
+         or it can assume the value of another parameter by using the
+         syntax &!par:&!alias; where alias is the same name of another
+         parameter.
+
+11/9/98: The version 0.5 was released
+
+8/9/98: Added the tag <template> that allows the programmer to use
+        a specified template directly in the code. More templates can
+        be added at the same time.
+
+8/9/98: Added the defaults parameters: if a parameter is not specified
+        the system can assume a specified default. The default can be
+        specified using the syntax &!param:default;
+
+8/9/98: The version 0.4 was released

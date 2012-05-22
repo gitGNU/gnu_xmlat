@@ -1,0 +1,91 @@
+&& doc_page
+&: This tag defines a documentation page.
+&: <no_params>
+<html>
+<head>
+  <meta name="author" value="pgfilterdoc">
+  <title>Tag description</title>
+</head>
+<body>
+<dl>
+
+&& /doc_page
+&: Close the <tag>doc_page</tag> tag.
+&: <no_params>
+</dl>
+</body>
+</html>
+
+&& doc_idx
+&: This tag defines an index page.
+&: <no_params>
+<html>
+<head>
+  <meta name="author" value="pgfilterdoc">
+  <title>Tag description</title>
+</head>
+<body>
+<ol>
+
+&& /doc_idx
+&: Close the <tag>doc_idx</tag> tag.
+&: <no_params>
+</ol>
+</body>
+</html>
+
+&& idx_el
+&: Defines an element of the index.
+&: <params>
+&:   <param name="docname" value="Name of the document that contains the definition of the element">
+&:   <param name="name" value"Name of the element.">
+&: </params>
+  <li> <code><a href="&!docname;#&!name;" target="doc" style="text-decoration:none">&lt;&!name;&gt;</a></code>
+
+&& tag
+&: Defines a tag.
+&: <no_params>
+<code>&lt;
+
+&& /tag
+&: Close the <tag>tag</tag> tag.
+&: <no_params>
+&gt;</code>
+
+&& doc_tag
+&: Defines the name of the documenting tag.
+&: <params>
+&:   <param name="name" value="Name of the tag">
+&: </params>
+<a name="&!name;"><dt><b>&!name;</b></dt></a>
+<dd>
+
+&& /doc_tag
+&: Close the <tag>doc_tag</tag> tag.
+&: <no_params>
+</dd>
+
+&& no_params
+&: No parameters are associated with the tag.
+&: <no_params>
+<p><dl><b>Parameters:</b><dd>None.</dd></dl>
+
+&& params
+&: Used to start a parameter list in the documentation.
+&: <no_params>
+<p><dl><b>Parameters:</b>
+
+&& /params
+&: Close the <tag>params</tag> tag.
+&: <no_params>
+</dl>
+
+&& param
+&: Defines the documentation for a parameter. Must be enclosed in a
+&: <tag>params</tag> tag.
+&: <params>
+&:   <param name="name" value="Name of the parameter">
+&:   <param name="value" value="Value of the parameter">
+&:   <param name="default" value="Default value for the parameter">
+&: </params>
+<dd><dl><dt><i>&!name;:</i></dt><dd>&!value;<br><b>Default:</b> &!default:None.;</dd></dl></dd>

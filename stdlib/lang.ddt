@@ -1,0 +1,39 @@
+&#= lang = it
+
+&& italian
+&: Text included between <tag>italian</tag> and <tag>/italian</tag> is included
+&: by the generator iff the constant <code>lang</code> has value <code>it</code>.
+&: <noparams>
+&# if (=lang, it)
+&# texton
+&# else
+&#= in-lang = it
+&# textoff
+&# endif
+
+&& /italian
+&: Closes the <tag>italian</tag> tag.
+&: <noparams>
+&# if (=in-lang, it)
+&#= in-lang =
+&# texton
+&# endif
+
+&& english
+&: Text included between <tag>english</tag> and <tag>/english</tag> is included
+&: by the generator iff the constant <code>lang</code> has value <code>en</code>.
+&: <code>en</code>.
+&# if (=lang, en)
+&# texton
+&# else
+&#= in-lang = en
+&# textoff
+&# endif
+
+&& /english
+&: Closes the <tag>english</tag> tag.
+&: <noparams>
+&# if (=in-lang, en)
+&#= in-lang =
+&# texton
+&# endif
