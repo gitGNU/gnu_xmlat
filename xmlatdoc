@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl5
+#!/usr/bin/perl
 
 ##  Copyright (C) 2000, 2012
  
@@ -73,8 +73,8 @@ foreach $elem (sort @tags) {
 print OUT "</doc_idx>\n";
 close(OUT);
 
-system "perl $home/sxmlc -template LIB/$template .$tname.xml $docname";
-system "perl $home/sxmlc -template LIB/$template .pgidx.xml doc-idx.html";
+system "perl $home/xmlatc -template LIB/$template .$tname.xml $docname";
+system "perl $home/xmlatc -template LIB/$template .pgidx.xml doc-idx.html";
 
 unlink ".$tname.xml";
 unlink ".pgidx.xml";
