@@ -18,7 +18,7 @@
 
 (define-module (xmlat regexp)
   #:use-module (ice-9 regex)
-  #:export (=~))
+  #:export (=~ regexp-split))
 
 ;; simulate '=~' in Perl
 ;; There're three possible return values:
@@ -32,11 +32,27 @@
 	 (cond
 	  ((> (match:count m) 2)
 	   (lambda (n)
-	     (match:substring m n)))
+	     (if m 
+		 (match:substring m n)
+		 (error "There's no any match!"))))
 	  (else
 	   (match:substring m 1)))))
-   (else
-    #f)))
+   (else #f)))
+
+(define* (regexp-split regex str #:optional (flags 0))
+  (let ((ret (fold-matches 
+              regex str (list '() 0 str)
+              (lambda (m prev)
+                (let* ((ll (car prev))
+                       (start (cadr prev))
+                       (tail (match:suffix m))
+                       (end (match:start m))
+                       (s (substring/shared str start end))
+                       (groups (map (lambda (n) (match:substring m n))
+                                    (iota (1- (match:count m))))))
+                  (list `(,@ll ,s ,@groups) (match:end m) tail)))
+              flags)))
+    `(,@(car ret) ,(caddr ret))))
 
 
     
