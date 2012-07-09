@@ -17,7 +17,7 @@
 ;;  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (xmlat strop)
-  #:use-modules (oop goops))
+  #:use-module (oop goops))
 
 (module-export-all! (current-module))
 
@@ -37,4 +37,20 @@
     (if i
 	(string-replace a "" i (+ i (string-length b)))
 	a)))
+
+(define chop
+  (lambda (str)
+    (if (string-null? str)
+	str
+	(string-drop-right str 1))))
+
+(define* (chomp str #:optional (char #\nl))
+  (if (string-null? str)
+      str
+      (if (eq? char (string-ref str (1- (string-length str))))
+	  (chop str)
+	  str)))
+
+(define (->string obj)
+  (object->string obj display))
 
