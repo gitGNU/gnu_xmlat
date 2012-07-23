@@ -54,8 +54,8 @@
 
 (define new-node?
   (lambda (str)
-    (and (not (string-contains? str #\,)) 
-	 (string-contains? str #\{))))
+    (and (not (string-contains str #\,)) 
+	 (string-contains str #\{))))
 
 (define read-inner-node
   (lambda (str port)
@@ -68,13 +68,13 @@
     (let ((str (string-trim-both (read-delimited "," port))))
       (skip-invalid-char port)
       (call-with-input-string 
-       s (lambda (p) (-> (read p)))))))
+       str (lambda (p) (-> (read p)))))))
 
 (define read-array
-  (lambda (port)
+  (lambda (str)
     (call-with-input-string 
-     str (lambda (p)
-	   (let lp((rd (read-line p)) (n 0) (result '()))
+     str (lambda (port)
+	   (let lp((rd (read-line port)) (n 0) (result '()))
 	     (cond
 	      ((eof-object? rd) 
 	       (skip-invalid-char port)
@@ -84,7 +84,11 @@
 	       (let* ((ll (string-split str #\:))
 		      (k (=> (car ll) n))
 		      (v (cadr ll)))
-		 (lp (read-line p) (1+ n) `(,@result (,k ,v)))))))))))
+		 (lp (read-line port) (1+ n) `(,@result (,k ,v)))))))))))
+
+(define new-array?
+  (lambda (port)
+    #t))
 
 (define-syntax-rule (get-key port)
   (read-delimited ":" port))
@@ -121,55 +125,50 @@
 	 ((eof-object? c)
 	  result)
 	 ((new-node? port)
-	  (lp (read-char port) `(,@result (,key ,(read-inner-node port))))
+	  (lp (read-char port) `(,@result (,key ,(read-inner-node "" port)))))
 	 ((new-array? port)
-	  (lp (read-char port) `(,@result (,key ,(read-array port))))
+	  (lp (read-char port) `(,@result (,key ,(read-array port)))))
 	 (else
-	  (lp (read-char port) `(,@result (,key ,(get-values port)))))))))))))
+	  (lp (read-char port) `(,@result (,key ,(get-value port)))))))))))
 
 (define* (json->xml #:optional (port (current-input-port)))
   (sxml->xml (json->sxml port)))
 
 (define sxml-array->json
   (lambda (arr)
-    
+    #t))
+
 (define sxml-elem->json
   (lambda (elem)
     (call-with-input-string
-     (lambda (port)
-       (
+     elem (lambda (port)
+	    #t))))
 
 (define sxml-node?
   (lambda (e)
     (and (list? e) (list? (car e)))))
 
+(define sxml-simple-node?
+  (lambda (e)
+    #t))
+
+;; implement sxml->json recursivly since there're few levels for json.
 (define sxml->json 
   (lambda (sxml)
-    (cond
-     ((null? sxml) "")
-     ((sxml-node? sxml)
-      (call-with-output-string
-       (lambda (port)
-	 (for-each 
-	  (lambda (x)
-	    (display "{\n" port)
-	    (format port "~a : ~a;~%" (car x) (sxml->json (cdr x))))
-	  sxml)
-	 (display sxml port)
-	 (display "}\n" port))))
-     (else
-      (object->string sxml)))))
-
-
-       ;; (display "{\n" port)
-       ;; (cond
-       ;; 	((null? sxml) #t);;(display "}" port))
-       ;; 	((not (list? sxml)) 
-       ;; 	 (display sxml port))
-       ;; 	(else
-       ;; 	 (format port "~a : ~a;~%" (sxml->json (car sxml))(sxml->json (cdr sxml)))
-       ;; 	 (display "}" port)))))))
-;;	 (sxml->json (cddr sxml))))))))
+    (call-with-output-string
+     (lambda (port)
+       (display "{\n" port)
+       (for-each 
+	(lambda (e)
+	  (cond
+	   ((null? e) (display "" port))
+	   ((sxml-simple-node? e)
+	    (format port "~s : ~s;~%" 
+		    (->string (car e)) (->string (cadr e))))
+	   (else
+	    (display (->string (car e)) port))))
+	sxml)
+       (display "}\n" port)))))
   
 (define* (xml->json #:optional (port (current-input-port)))
   (sxml->json (xml->sxml port)))
