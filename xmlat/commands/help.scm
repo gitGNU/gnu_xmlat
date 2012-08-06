@@ -17,7 +17,7 @@
 ;;  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (xmlat commands help)
-  #:export (show-help))
+  #:export (show-help main))
 
 (define help-str
   "

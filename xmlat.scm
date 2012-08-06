@@ -33,19 +33,19 @@
 (define main
   (lambda (args)
     (let* ((options 
-	    (getopt-long args option-spec))
+	    (getopt-long (car args) option-spec))
 	   (need-help?
 	    (option-ref options 'help #f))
 	   (need-version?
 	    (option-ref options 'version #f)))
       (cond
-       (need-help? (show-help))
-       (need-version? (show-version))
        ((find-command (if (no-command? args) "help" (cadr args)))
 	=> (lambda (mod)
 	     (exit (apply (module-ref mod 'main) (if (no-command-args? args)
 						     '()
 						     (cddr args))))))
+       (need-version? (show-version))
+       (need-help? (show-help))
        (else
 	(format (current-error-port)
 		"xmlat: unknown command ~s~%" (cadr args))
