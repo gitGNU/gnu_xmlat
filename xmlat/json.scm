@@ -152,7 +152,6 @@
   (lambda (e)
     #t))
 
-;; implement sxml->json recursivly since there're few levels for json.
 (define sxml->json 
   (lambda (sxml)
     (call-with-output-string
