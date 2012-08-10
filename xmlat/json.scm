@@ -86,6 +86,7 @@
 		      (v (cadr ll)))
 		 (lp (read-line port) (1+ n) `(,@result (,k ,v)))))))))))
 
+;; TODO
 (define new-array?
   (lambda (port)
     #t))
@@ -134,10 +135,12 @@
 (define* (json->xml #:optional (port (current-input-port)))
   (sxml->xml (json->sxml port)))
 
+;; TODO
 (define sxml-array->json
   (lambda (arr)
     #t))
 
+;; TODO
 (define sxml-elem->json
   (lambda (elem)
     (call-with-input-string
@@ -148,6 +151,7 @@
   (lambda (e)
     (and (list? e) (list? (car e)))))
 
+;; TODO
 (define sxml-simple-node?
   (lambda (e)
     #t))
