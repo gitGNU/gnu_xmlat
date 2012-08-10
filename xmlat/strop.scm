@@ -17,7 +17,8 @@
 ;;  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (xmlat strop)
-  #:use-module (oop goops))
+  #:use-module (oop goops)
+  #:use-module (ice-9 rdelim))
 
 (module-export-all! (current-module))
 
@@ -53,4 +54,12 @@
 
 (define (->string obj)
   (object->string obj display))
+
+(define string-read-delimited
+  (lambda (str delim)
+    (call-with-input-string
+     str
+     (lambda (port)
+       (read-delimited str port)))))
+
 

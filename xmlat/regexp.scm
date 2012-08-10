@@ -18,14 +18,14 @@
 
 (define-module (xmlat regexp)
   #:use-module (ice-9 regex)
-  #:export (=~ regexp-split))
+  #:export (regexp-run regexp-split))
 
 ;; simulate '=~' in Perl
 ;; There're three possible return values:
 ;; 1. single group or no-group, return the match string;
 ;; 2. multi-groups, return a procedure who accepts the index of the matches;
 ;; 3. no match, return #f.
-(define-syntax-rule (=~ str re)
+(define-syntax-rule (regexp-run str re)
   (cond
    ((string-match re str)
     => (lambda (m)
