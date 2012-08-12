@@ -17,10 +17,9 @@
 ;;  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (xmlat commands compile)
-  #:use-module ()
+  #:use-module (xmlat utils)
+  #:export ())
 
-
-(define home ".")
 (define ifon 1)
 (define fnameIn "-")
 (define fnameOut ">-")
@@ -38,16 +37,9 @@
 # are ignored.
 
 # Needed to handle DOS directories
-my $prg = $0;
-$prg =~ s/\\/\//g;
-$prg =~ /(.*?)\/?([^\/]*)$/;
-$home = $1 if ($1);
-$prgname = $2;
 
-#Parses the command line
-sub parseCmdLine {
-    my $forceStdout = 0;
-    my $usage = "Usage: $prgname {param}*
+(define usage 
+ "Usage: $prgname {param}*
 
   param ::= fileName | switchParam
   switchParam ::= { -c | --constant } constantName=value |
@@ -60,7 +52,24 @@ sub parseCmdLine {
                   { -p | --prettyformat }
 
 This software is developed by Antonio Cisternino (C)1998, 1999.
-";
+And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012.
+"）
+
+(define process-prg
+  (lambda (prg)
+    (=~ (=~ prg "s/\\/\//g") "/(.*?)\/?([^\/]*)$/")))
+
+(define main
+  (lambda (args)
+    (let* ((get-arg (make-args-get-method args))
+	   (prg (process-prg (get-arg 0)))
+	   (home (or (get-arg 1) "."))
+	   (prgname (get-arg 2)))
+      
+      
+#Parses the command line
+sub parseCmdLine {
+    my $forceStdout = 0;
 
     my $i = 0;
 
