@@ -26,6 +26,7 @@
 (define prgname)
 
 (define (compile . args)
+  #t)
 
 (define texton #t)
 (define iftexton #t) ;; Introduced to distinguish between directive texton and if

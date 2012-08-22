@@ -44,13 +44,11 @@
 	(shell (+ "sed " i r s u pattern str))
 	(shell (+ "echo -n " str "|sed " i r s u pattern)))))
 
-(define* (tr set1 #:optional (set2 #f)
-	     #:key (complement #f) (delete #f) (squeeze #f) (truncate #f))
-  (let ((c (if in-place " -c " ""))
-	(d (if extend " -d " ""))
-	(s (if seperate " -s " ""))
-	(t (if unbuffered " -t " "")))
-    (if file
-  
+(define* (tr str set1 #:optional (set2 "") #:key (opt #f))
+  （shell (+ "echo -n " str "|tr " opt set1 set2)))
+
+
+
+
 	      
 
