@@ -22,35 +22,22 @@
 ;;  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (use-modules (ice-9 getopt-long)
-	     (xmlat version)
 	     (xmlat commands)
 	     (xmlat commands help))
 
-(define option-spec
-  '((version (single-char #\v) (value #f))
-    (help (single-char #\h) (value #f))))
-
 (define main
   (lambda (args)
-    (let* ((options 
-	    (getopt-long `(,(car args)) option-spec))
-	   (need-help?
-	    (option-ref options 'help #f))
-	   (need-version?
-	    (option-ref options 'version #f)))
       (cond
        ((find-command (if (no-command? args) "help" (cadr args)))
 	=> (lambda (mod)
 	     (exit (apply (module-ref mod 'main) (if (no-command-args? args)
 						     '()
 						     (cddr args))))))
-       (need-version? (show-version))
-       (need-help? (show-help))
        (else
 	(format (current-error-port)
 		"xmlat: unknown command ~s~%" (cadr args))
 	(format (current-error-port)
 		"Try `xmlat help' for more information.~%")
-	(exit 1))))))
+	(exit 1)))))
 	
 

@@ -18,6 +18,7 @@
 
 (define-module (xmlat commands compile)
   #:use-module (xmlat utils)
+  #:use-module (ice-9 getopt-long)
   #:export ())
 
 (define ifon 1)
@@ -33,11 +34,11 @@
 (define prettyformat #f)
 (define htmlspaces #f)
 
-# This variable means: I'm waiting for the &# endif or another if statement
-# because the guard is false. All text and directives other than &# endif
-# are ignored.
+;; This variable means: I'm waiting for the &# endif or another if statement
+;; because the guard is false. All text and directives other than &# endif
+;; are ignored.
 
-# Needed to handle DOS directories
+;; Needed to handle DOS directories
 
 (define usage 
  "Usage: $prgname {param}*
@@ -68,7 +69,10 @@ And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012.
 	   (prgname (get-arg 2)))
       
       
-#Parses the command line
+;; Parses the command line
+(define parse-cmdline
+  (lambda ()
+    (
 sub parseCmdLine {
     my $forceStdout = 0;
 

@@ -17,20 +17,29 @@
 ;;  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (xmlat commands help)
-  #:export (show-help main))
+  #:use-module (xmlat strop)
+  #:export (show-help))
 
-(define help-str
+(define help-str-head
   "
 GNU Xml Applicable Tools.
 Original Author: Antonio Cisternino
 Current Maintainer: NalaGinrut<mulei@gnu.org> who rewritten it with GNU Guile.
 
---help -h: Show this screen.
---version -v: Show version.
+commands:
+")
 
+(define help-str-foot
+  "
 God bless hacking.
 ")
 
-(define (show-help) (display help-str))
+(define (gen-help-str)
+  (+ help-str-head  "" help-str-foot)
+  ;; TODO: find out all commands name and summary, then print them all.
+  )
 
+(define (show-help) (display (gen-help-str)))
+
+(define %summary "Show this screen")
 (define main show-help)
