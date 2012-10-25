@@ -33,7 +33,7 @@
 (define main
   (lambda (args)
     (let* ((options 
-	    (getopt-long (car args) option-spec))
+	    (getopt-long `(,(car args)) option-spec))
 	   (need-help?
 	    (option-ref options 'help #f))
 	   (need-version?
