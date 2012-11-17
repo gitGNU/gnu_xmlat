@@ -67,7 +67,7 @@
       (case (pat:op pat)
 	(("s") (sed patten str))
 	(("tr") (tr str (pat:p1 pat) (pat:p2 pat) (pat:opt pat)))
-	(("") (regexp-run str pattern))
+	(("m" "") (regexp-run str pattern))
 	(else (error =~ "wrong operation from pattern!" pattern))))))
 
 
