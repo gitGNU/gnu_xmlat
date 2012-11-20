@@ -18,6 +18,7 @@
 
 (define-module (xmlat commands compile)
   #:use-module (xmlat utils)
+  #:use-module (xmlat xml)
   #:use-module (srfi srfi-1)
   #:use-module (ice-9 getopt-long)
   #:export (compile))
@@ -47,14 +48,11 @@ And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012.
     (pretty-format (single-char #\p) (value #f))))
 
 (define parse-tag
-  (lambda (tag)
-    (let* ((p1 "s/\n/\ /g")
-	   (p2 (+ "s/<\?(.*)\?>/" tag "/sg"))
-	   (p3 (+ "s/<(.*)\/>/" tag "/sg"))
-	   (p4 "/<\s*(!?\/?[\w\-]+)(.*?)>/")
-	   (t (fold (lambda (p prev)
-		      (=~ prev p))
-		    tag (list p1 p2 p3 p4))))
+  (lambda (xml)
+    (let ((sxml (string->sxml xml)))
+      ;; TODO:
+      ;; 1. generate a hash-table with key-value of nodes
+      ;; 2. (values name kv-table)
       #t)))
 
 (define do-xmlat-compile

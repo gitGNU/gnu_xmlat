@@ -48,8 +48,14 @@
       (lambda (port)
 	(display (sxml->string sxml) port)))))
 
+(define string->sxml
+  (lambda (str)
+    (call-with-input-string 
+     str (lambda (port)
+	   (xml->sxml port)))))
+			   
 (define sxml:get-the-node
   (lambda (sxml)
+    #t))
     
-       
 
