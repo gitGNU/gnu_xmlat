@@ -56,7 +56,6 @@ cscope.files
 *.rn
 *.rns
 *.scan
-*.am
 *.d
 version.scm
 \#*
