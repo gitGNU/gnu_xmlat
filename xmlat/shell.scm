@@ -45,7 +45,7 @@
 	(shell (+ "echo -n " str "|sed " i r s u pattern)))))
 
 (define* (tr str set1 #:optional (set2 "") #:key (opt #f))
-  （shell (+ "echo -n " str "|tr " opt set1 set2)))
+  (shell (+ "echo -n " str "|tr " opt set1 set2)))
 
 
 

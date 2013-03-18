@@ -1,8 +1,7 @@
-#! /usr/local/bin/guile \
--e main
+#! /usr/bin/env guile
 !#
 
-;;  Copyright (C) 2012
+;;  Copyright (C) 2012-2013
 
 ;; xmlat
 ;; Original Author: Antonio Cisternino
@@ -31,7 +30,7 @@
        ((find-command (if (no-command? args) "help" (cadr args)))
 	=> (lambda (mod)
 	     (exit (apply (module-ref mod 'main) (if (no-command-args? args)
-						     '()
+                                                     '()
 						     (cddr args))))))
        (else
 	(format (current-error-port)
@@ -40,4 +39,4 @@
 		"Try `xmlat help' for more information.~%")
 	(exit 1)))))
 	
-
+(main (command-line))

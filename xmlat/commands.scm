@@ -35,6 +35,3 @@
   (lambda (name)
     (resolve-module `(,@command-path ,(string->symbol name)) #:ensure #f)))
 
-
-
-

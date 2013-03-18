@@ -19,8 +19,9 @@
 (define-module (xmlat utils)
   #:use-module (xmlat regexp)
   #:use-module (xmlat strop)
-  #:use-module (xmlat shell)
-  #:export (make-args-get-method =~)
+  #:use-module (srfi srfi-9)
+  #:export (make-args-get-method fetch-module
+            get-postfix-handler get-prefix-handler))
 
 (define (get-args-method args n)
   (catch #t 
@@ -32,44 +33,11 @@
   (lambda (n)
     (get-args-method args n)))
 
-(define-record-type =~:pat
-  (=~:make-pat op p1 p2 opt)
-  (op pat:op)
-  (p1 pat:p1)
-  (p2 pat:p2)
-  (opt pat:opt))
+(define (fetch-module name)
+  (primitive-eval `(resolve-module '(xmlat ,name))))
 
-(define =~:pattern-parser
-  (lambda (pat)
-    (let ((m 0) 
-	  (n 0)
-	  (op #f)
-	  (p1 #f)
-	  (p2 #f)
-	  (opt #f))
-      (define-syntax-rule (inner-parser i)
-	(case m
-	  ((0) (set! op (substring n i)) (set! n (1+ i)))
-	  ((1) (set! p1 (substring n i)) (set! n (1+ i)))
-	  ((2) (set! p2 (substring n i)) (set! n (1+ i)))
-	  ((3) (set! opt (substring n i)) (set! n (1+ i)))
-	  (else (error =~:opt-parser "invalid m" m))))
-    (string-for-each-index (lambda (i)
-			     (let ((c (string-ref pat i)))
-			       (if (char=? c #\/)
-				   (inner-parser i))))
-			   pat)
-    (=~:make-pat op p1 p2 opt))))
+(define (get-prefix-handler mod prefix name)
+  (module-ref mod (symbol-append prefix name)))
 
-(define =~
-  (lambda (str pattern)
-    (let ((pat (=~:pattern-parser pattern)))
-      (case (pat:op pat)
-	(("s") (sed patten str))
-	(("tr") (tr str (pat:p1 pat) (pat:p2 pat) (pat:opt pat)))
-	(("m" "") (regexp-run str pattern))
-	(else (error =~ "wrong operation from pattern!" pattern))))))
-
-
-	
-	  
+(define (get-postfix-handler mod name postfix)
+  (module-ref mod (symbol-append name postfix)))

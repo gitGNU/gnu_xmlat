@@ -19,9 +19,14 @@
 (define-module (xmlat xml)
   #:use-module (sxml simple)
   #:use-module (sxml xpath)
-  #:use-module (ssax sxml)
+  #:use-module (sxml ssax)
   #:export (get-sxml-from-file
-	    sxml:get-the-node))
+	    sxml:get-the-node
+            xml->scm scm->xml xml-string->scm))
+
+(define xml->scm xml->sxml)
+(define xml-string->scm xml->sxml)
+(define scm->xml sxml->xml)
 
 (define char-set:xml-whitespace
   (char-set-delete char-set:whitespace #\sp))

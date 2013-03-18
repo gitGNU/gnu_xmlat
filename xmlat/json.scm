@@ -1,4 +1,4 @@
-;;  Copyright (C) 2012
+;;  Copyright (C) 2012-2013
 
 ;; Original Author: Antonio Cisternino
 ;; Current Maintainer: NalaGinrut<mulei@gnu.org> who rewritten it with GNU Guile.
@@ -17,168 +17,22 @@
 ;;  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (xmlat json)
-  #:use-module (xmlat read)
-  #:use-module (xmlat strop)
-  #:use-module (ice-9 rdelim)
-  #:use-module (sxml simple)
-  #:export (json->sxml 
-	    sxml->json 
-	    json->xml 
-	    xml->json))
+  #:use-module (xmlat json builder)
+  #:use-module (xmlat json parser)
+  #:use-module (xmlat json syntax)
+  #:re-export (scm->json
+               scm->json-string
+               json->scm
+               json-string->scm
+               json))
 
-(define-syntax-rule (-> e)
-  (call-with-input-string
-   e (lambda (p)
-       (let ((ts (read p)))
-	 (if (symbol? ts)
-	     ts
-	     (string->symbol ts))))))
-
-(define-syntax =>
-  (syntax-rules ()
-    ((_ str n)
-     (let* ((ss (substring/shared str 0 (string-index str #\:)))
-	    (ss (+ ss (object->string n))))
-       (-> ss)))
-    ((_ str)
-     (substring/shared str 0 (string-index str #\:)))))
-      
-(define read-valid-char
-  (lambda (port)
-    (skip-the-charset port char-set:whitespace)))
-
-(define skip-invalid-char
-  (lambda (port)
-    (read-valid-char port)
-    (unread-char port)))
-
-(define new-node?
-  (lambda (str)
-    (and (not (string-contains str #\,)) 
-	 (string-contains str #\{))))
-
-(define read-inner-node
-  (lambda (str port)
-    (skip-invalid-char port)
-    (read-delimited "," port) ;; skip useless char
-    (list (=> str) (json->sxml port))))
-
-(define get-value
-  (lambda (port)
-    (let ((str (string-trim-both (read-delimited "," port))))
-      (skip-invalid-char port)
-      (call-with-input-string 
-       str (lambda (p) (-> (read p)))))))
-
-(define read-array
-  (lambda (str)
-    (call-with-input-string 
-     str (lambda (port)
-	   (let lp((rd (read-line port)) (n 0) (result '()))
-	     (cond
-	      ((eof-object? rd) 
-	       (skip-invalid-char port)
-	       (read-delimited "," port) ;; skip useless char
-	       result)
-	      (else
-	       (let* ((ll (string-split str #\:))
-		      (k (=> (car ll) n))
-		      (v (cadr ll)))
-		 (lp (read-line port) (1+ n) `(,@result (,k ,v)))))))))))
-
-;; TODO
-(define new-array?
-  (lambda (port)
-    #t))
-
-(define-syntax-rule (get-key port)
-  (read-delimited ":" port))
-
-(define get-end-of-node
-  (lambda (json)
-    (and (string-null? json) 
-	 (error get-end-of-node "invalid json, can't find the end of node"))
-    (let lp((n 0) (p 0))
-      (cond
-       ((< p 0) 
-	(error get-end-of-node "invalid json, excessive '}'"))
-       ((char=? #\} (string-ref json n))
-	(if (zero? p)
-	    n
-	    (lp (1+ n) (1- p))))
-       ((char=? #\{ (string-ref json n))
-	(lp (1+ n) (1+ p)))
-       (else
-	(lp (1+ n) p))))))
-  
-(define* (json->sxml #:optional (port (current-input-port)))
-  (define status 'prelude)
-  (let lp((c (read-valid-char port)) (result '()))
-    (case status
-     ((prelude)
-      (set! status 'normal)
-      (if (char=? c #\{)
-	  (lp (read-valid-char port) result)
-	  (error json->sxml "invalid json format!")))
-     (else
-      (let ((key (=> (get-key port))))
-	(cond
-	 ((eof-object? c)
-	  result)
-	 ((new-node? port)
-	  (lp (read-char port) `(,@result (,key ,(read-inner-node "" port)))))
-	 ((new-array? port)
-	  (lp (read-char port) `(,@result (,key ,(read-array port)))))
-	 (else
-	  (lp (read-char port) `(,@result (,key ,(get-value port)))))))))))
-
-(define* (json->xml #:optional (port (current-input-port)))
-  (sxml->xml (json->sxml port)))
-
-;; TODO
-(define sxml-array->json
-  (lambda (arr)
-    #t))
-
-;; TODO
-(define sxml-elem->json
-  (lambda (elem)
-    (call-with-input-string
-     elem (lambda (port)
-	    #t))))
-
-(define sxml-node?
-  (lambda (e)
-    (and (list? e) (list? (car e)))))
-
-;; TODO
-(define sxml-simple-node?
-  (lambda (e)
-    #t))
-
-(define sxml->json 
-  (lambda (sxml)
-    (call-with-output-string
-     (lambda (port)
-       (display "{\n" port)
-       (for-each 
-	(lambda (e)
-	  (cond
-	   ((null? e) (display "" port))
-	   ((sxml-simple-node? e)
-	    (format port "~s : ~s;~%" 
-		    (->string (car e)) (->string (cadr e))))
-	   (else
-	    (display (->string (car e)) port))))
-	sxml)
-       (display "}\n" port)))))
-  
-(define* (xml->json #:optional (port (current-input-port)))
-  (sxml->json (xml->sxml port)))
-
-
-    
-		    
-
-	  
-
+(define (decode-jt json) 
+  (hash-map->list 
+   (lambda (x y) 
+     (if (hash-table? y) 
+         (list (string->symbol x) (decode-jt y))
+         (list (string->symbol x) (cond
+                                   ((list? y) (map string->symbol y))
+                                   ((string-null? y) ,@'())
+                                   (else (string->symbol y))))))
+   json))
