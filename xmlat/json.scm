@@ -26,13 +26,3 @@
                json-string->scm
                json))
 
-(define (decode-jt json) 
-  (hash-map->list 
-   (lambda (x y) 
-     (if (hash-table? y) 
-         (list (string->symbol x) (decode-jt y))
-         (list (string->symbol x) (cond
-                                   ((list? y) (map string->symbol y))
-                                   ((string-null? y) ,@'())
-                                   (else (string->symbol y))))))
-   json))

@@ -1,7 +1,8 @@
 ;;; (json parser) --- Guile JSON implementation.
 
 ;; Copyright (C) 2013 Aleix Conchillo Flaque <aconchillo at gmail dot com>
-;;
+;; Mu Lei known as NalaGinrut <mulei@gnu.org> modified part of it.
+;; 
 ;; This file is part of guile-json.
 ;;
 ;; guile-json is free software; you can redistribute it and/or
@@ -32,6 +33,20 @@
   #:use-module (rnrs bytevectors)
   #:export (json->scm
             json-string->scm))
+
+(define-syntax-rule (-> str)
+  (string->symbol 
+   (call-with-output-string
+    (lambda (port)
+      (string-for-each
+       (lambda (c)
+         (display
+          (case c
+            ((#\/) #\-)
+            ((#\\) #\_)
+            (else c))
+          port))
+       str)))))
 
 ;;
 ;; Number parsing helpers
@@ -146,13 +161,13 @@
       ;; Skip colon and read value
       ((#\:)
        (read-char port)
-       (cons key (json-read port)))
+       (list (-> key) (json-read port)))
       ;; invalid object
       (else (throw 'json-invalid))))))
 
 (define (read-object port)
   (let loop ((c (peek-char port))
-             (pairs (make-hash-table)))
+             (pairs '()))
     (case c
       ;; Skip whitespaces
       ((#\ht #\vt #\lf #\cr #\sp)
@@ -165,8 +180,7 @@
       ;; Read one pair and continue
       ((#\")
        (let ((pair (read-pair port)))
-         (hash-set! pairs (car pair) (cdr pair))
-         (loop (peek-char port) pairs)))
+         (loop (peek-char port) (cons pair pairs))))
       ;; Skip comma and read more pairs
       ((#\,)
        (read-char port)
