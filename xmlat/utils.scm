@@ -41,3 +41,14 @@
 
 (define (get-postfix-handler mod name postfix)
   (module-ref mod (symbol-append name postfix)))
+
+(define* (cat file/port #:optional (output-port #f))
+  (define get-string-all (@ (rnrs io ports) get-string-all))
+  (if (port? file/port)
+      (get-string-all file/port)
+      (let ((str (if (port? file/port)
+                     (get-string-all file/port)
+                     (if (file-exists? file/port)
+                         (call-with-input-file file/port get-string-all)
+                         (error cat "File doesn't exist!" file/port)))))
+        (format output-port "~a" str))))
