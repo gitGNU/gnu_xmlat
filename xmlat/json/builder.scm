@@ -1,6 +1,7 @@
 ;;; (json builder) --- Guile JSON implementation.
 
 ;; Copyright (C) 2013 Aleix Conchillo Flaque <aconchillo at gmail dot com>
+;; Mu Lei known as NalaGinrut <mulei@gnu.org> modified part of it.;;
 ;;
 ;; This file is part of guile-json.
 ;;
@@ -82,9 +83,9 @@
 
 (define (build-object-pair p port escape pretty level)
   (display (indent-string pretty level) port)
-  (json-build-string (car p) port escape)
+  (json-build-string (if (symbol? (car p)) (symbol->string (car p)) (car p)) port escape)
   (display " : " port)
-  (json-build (cdr p) port escape pretty level))
+  (json-build (cadr p) port escape pretty level))
 
 (define (build-newline port pretty)
   (cond (pretty (newline port))))
@@ -139,14 +140,13 @@
   (build-newline port pretty)
   (simple-format port "~A{" (indent-string pretty level))
   (build-newline port pretty)
-  (let ((pairs (hash-map->list cons scm)))
-    (unless (null? pairs)
-      (build-object-pair (car pairs) port escape pretty (+ level 1))
-      (for-each (lambda (p)
-                  (display "," port)
-                  (build-newline port pretty)
-                  (build-object-pair p port escape pretty (+ level 1)))
-                (cdr pairs))))
+  (unless (null? scm)
+          (build-object-pair (car scm) port escape pretty (+ level 1))
+          (for-each (lambda (p)
+                      (display "," port)
+                      (build-newline port pretty)
+                      (build-object-pair p port escape pretty (+ level 1)))
+                    (cdr scm)))
   (build-newline port pretty)
   (simple-format port "~A}" (indent-string pretty level)))
 
@@ -155,9 +155,12 @@
    ((eq? scm #nil) (json-build-null port))
    ((boolean? scm) (json-build-boolean scm port))
    ((number? scm) (json-build-number scm port))
+   ((symbol? scm) (json-build-string (symbol->string scm) port escape))
    ((string? scm) (json-build-string scm port escape))
-   ((list? scm) (json-build-array scm port escape pretty level))
-   ((hash-table? scm) (json-build-object scm port escape pretty level))
+   ;;((list? scm) (json-build-array scm port escape pretty level))
+   ;;((hash-table? scm) (json-build-object scm port escape pretty level))
+   ((array? scm) (json-build-array scm port escape pretty level))
+   ((list? scm) (json-build-object scm port escape pretty level))
    (else (throw 'json-invalid))))
 
 ;;
