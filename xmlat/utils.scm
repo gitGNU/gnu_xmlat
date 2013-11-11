@@ -20,10 +20,12 @@
   #:use-module (xmlat strop)
   #:use-module (srfi srfi-9)
   #:use-module (ice-9 q)
-  #:export (make-args-get-method fetch-module get-file-ext
+  #:export (make-args-get-method fetch-module get-file-ext get-string-all
             get-postfix-handler get-prefix-handler inc! dec!
             new-stack new-queue stack-pop! stack-push! stack-top stack-empty?
             queue-out! queue-in! queue-head queue-tail queue-empty?))
+
+(define get-string-all (@ (rnrs) get-string-all))
 
 (define new-stack make-q)
 (define new-queue make-q)

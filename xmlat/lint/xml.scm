@@ -76,10 +76,11 @@
       (display c)
       (do-xml-lint port)))))
 
-(define* (xml-lint xml #:key (print #f) (indent-str "  "))
+(define* (xml-lint xml/port #:key (print #f) (indent-str "  "))
   (set! %indent-str indent-str)
-  (if print
-      (call-with-input-string xml do-xml-lint) 
-      (with-output-to-string 
-        (lambda ()
-          (call-with-input-string xml do-xml-lint)))))
+  (let ((xml (if (port? xml/port) (get-string-all xml/port) xml/port)))
+    (if print
+        (call-with-input-string xml do-xml-lint) 
+        (with-output-to-string 
+          (lambda ()
+            (call-with-input-string xml do-xml-lint))))))

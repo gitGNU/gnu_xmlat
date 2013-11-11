@@ -17,30 +17,29 @@
 
 (define-module (xmlat commands lint)
   #:use-module (xmlat utils)
-  #:use-module (ice-9 getopt-long)
-  #:export (compile))
+  #:use-module (ice-9 getopt-long))
 
 (define usage 
- "Usage: xmlat lint filename [options]*
+ "Usage: xmlat lint [options]* filename
 
   -h | --help         ==> Show this screen.
   -f | --format       ==> Specify the file format (ignore it to detect automatically)
   -o | --output       ==> Specify the output file (ignore it to print out it directly)
 
 Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
-"）
+")
 
 (define option-spec
   '((help (single-char #\h) (value #f))
-    (fmt (single-char #\f) (value #f))
-    (output (single-char #\o) (value #f))))
+    (type (single-char #\t) (value #t))
+    (output (single-char #\o) (value #t))))
 
 (define (do-xmlat-lint filename fmt outfile)
   (define linter 
     (let ((m (resolve-module `(xmlat lint ,fmt))))
-      (unless (module-filename m)
-              (module-ref m (symbol-append fmt '-lint))
-              (error linter "The format is not supported!" fmt))))
+      (if (module-filename m)
+          (module-ref m (symbol-append fmt '-lint))
+          (error linter "The format is not supported!" fmt))))
   (define out (if (file-exists? filename)
                   (call-with-input-file filename linter)
                   (error do-xmlat-lint "no such a file" filename)))
@@ -51,22 +50,31 @@ Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
     (call-with-output-file outfile (lambda (port) (display out port))))
    (else (display out))))
 
-(define (detect-fmt filename)
+(define (detect-type filename)
   (let ((ext (get-file-ext filename)))
     (if ext
         (string->symbol ext)
-        (error detect-fmt 
+        (error detect-type
                "Can't detect the file format! Please specify it!" filename))))
 
-(define xmlat-lint
-  (lambda args
-    (let* ((filename (if (< (length args) 2) (display usage) (car args)))
-	   (options (getopt-long args option-spec))
-	   (need-help (option-ref options ’help #f))
-	   (has-fmt (option-ref options 'fmt #f)))
-      (and need-help (display usage) (primitive-exit)) ;; show help and exit.
-      (do-xmlat-lint filename 
-                     (if has-fmt (string->symbol has-fmt) (detect-fmt filename))
-                     outfile))))
+(define (get-the-file args)
+  (car (list-tail args (1- (length args)))))
+
+(define (xmlat-lint . args)
+  (if (< (length args) 2)
+      (display usage)
+      (let* ((filename (get-the-file args))
+             (options (getopt-long args option-spec))
+             (need-help (option-ref options 'help #f))
+             (has-type (option-ref options 'type #f))
+             (outfile (option-ref options 'output #f)))
+        (cond
+         (need-help 
+          (display usage)
+          (primitive-exit)) ;; show help and exit.
+         (else
+          (do-xmlat-lint filename 
+                         (if has-type (string->symbol has-type) (detect-type filename))
+                         outfile))))))
       
 (define main xmlat-lint)
