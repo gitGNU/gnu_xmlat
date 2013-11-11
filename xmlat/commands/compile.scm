@@ -35,7 +35,7 @@
 
 This software is developed by Antonio Cisternino (C)1998, 1999.
 And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012-2013.
-"）
+")
 
 (define option-spec
   '((help (single-char #\h) (value #f))
@@ -63,7 +63,7 @@ And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012-2013.
   (lambda args
     (let* ((filename (if (< (length args) 2) (display usage) (car args)))
 	   (options (getopt-long args option-spec))
-	   (need-help (option-ref options ’help #f))
+	   (need-help (option-ref options 'help #f))
 	   (need-constant (option-ref options 'constant #f))
 	   (need-template (option-ref options 'template #f))
 	   (need-stdout-xml (option-ref options 'stdoutxml #f))
