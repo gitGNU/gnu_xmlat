@@ -27,6 +27,7 @@
 (define %indent-str "")
 (define tags (new-stack)) ; a stack to record recursive tags
 (define (cur-tag) (stack-top tags)) ; current not-closed-tag
+(define last-char #\nl)
 
 (define-syntax-rule (is-whitespace? c)
   (char-set-contains? char-set:whitespace c))
@@ -70,10 +71,13 @@
     (cond
      ((eof-object? c) #t)
      ((char=? c #\<)
+      (and (not (char=? last-char #\nl)) (newline))
       (read-the-tag port)
+      (set! last-char c)
       (do-xml-lint port))
      (else 
       (display c)
+      (set! last-char c)
       (do-xml-lint port)))))
 
 (define* (xml-lint xml/port #:key (print #f) (indent-str "  "))
