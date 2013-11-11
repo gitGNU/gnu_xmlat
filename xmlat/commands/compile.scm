@@ -1,4 +1,4 @@
-;;  Copyright (C) 2012
+;;  Copyright (C) 2012-2013
 
 ;; Original Author: Antonio Cisternino
 ;; Current Maintainer: NalaGinrut<mulei@gnu.org> who rewritten it with GNU Guile.
@@ -20,8 +20,7 @@
   #:use-module (xmlat utils)
   #:use-module (xmlat xml)
   #:use-module (srfi srfi-1)
-  #:use-module (ice-9 getopt-long)
-  #:export (compile))
+  #:use-module (ice-9 getopt-long))
 
 (define usage 
  "Usage: xmlat compile filename [options]*
@@ -35,7 +34,7 @@
   -p | --prettyformat ==> Use pretty format.
 
 This software is developed by Antonio Cisternino (C)1998, 1999.
-And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012.
+And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012-2013.
 "）
 
 (define option-spec
@@ -81,4 +80,3 @@ And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012.
        need-pretty-format)))) ;; end xmlat-compile. 
       
 (define main xmlat-compile)
-
