@@ -44,7 +44,7 @@ Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
           (error do-xmlat-lint "The format is not supported!" fmt))))
   (define out (if (file-exists? filename)
                   (call-with-input-file filename 
-                    (lambda (port) (linter port #:indent-str indent)))
+                    (lambda (port) (linter port #:print #t #:indent-str indent)))
                   (error do-xmlat-lint "no such a file" filename)))
   (cond
    (outfile
@@ -61,22 +61,20 @@ Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
                "Can't detect the file format! Please specify it!" filename))))
 
 (define (xmlat-lint . args)
-  (if (< (length args) 2)
+  (let* ((filename (get-the-file args))
+         (options (getopt-long (get-the-opts args) option-spec))
+         (need-help (option-ref options 'help #f))
+         (has-type (option-ref options 'type #f))
+         (outfile (option-ref options 'output #f))
+         (indent (option-ref options 'indent #f)))
+    (cond
+     (need-help 
       (display usage)
-      (let* ((filename (get-the-file args))
-             (options (getopt-long (get-the-opts args) option-spec))
-             (need-help (option-ref options 'help #f))
-             (has-type (option-ref options 'type #f))
-             (outfile (option-ref options 'output #f))
-             (indent (option-ref options 'indent #f)))
-        (cond
-         (need-help 
-          (display usage)
-          (primitive-exit)) ;; show help and exit.
-         (else
-          (do-xmlat-lint filename 
-                         (if has-type (string->symbol has-type) (detect-type filename))
-                         outfile
-                         (if indent indent "  ")))))))
+      (primitive-exit)) ;; show help and exit.
+     (else
+      (do-xmlat-lint filename 
+                     (if has-type (string->symbol has-type) (detect-type filename))
+                     outfile
+                     (if indent indent "  "))))))
 
 (define main xmlat-lint)

@@ -35,17 +35,35 @@
 (define-syntax-rule (indent-for-levels)
   (for-each (lambda (x) (display %indent-str)) (iota (1- levels))))
 
-(define (read-the-tag port)
-  (let ((tag (read-delimited " >" port 'peek)))
-
+(define (get-tag-start port)
+  (let lp((c (peek-char port)))
     (cond
+     ((eof-object? c) (error get-tag-start "Invalid tag!"))
+     ((is-whitespace? c) ; handle "< tag>" situation
+      (read-char port)
+      (set! last-char c)
+      (lp (peek-char port)))
+     ((and (char=? last-char #\<) (char=? c #\?)) ; <? tag
+      (read-char port) ; skip #\?
+      (display "<?")
+      (display (string-trim-both (read-delimited "?" port 'peek)))
+      (display "?>")
+      (read-char port) ; skip #\?
+      (read-char port) ; skip #\>
+      #f)
+     (else (read-delimited " >" port 'peek)))))
+      
+(define (read-the-tag port)
+  (let ((tag (get-tag-start port)))
+    (cond
+     ((not tag) #f) ; <? tag
      ((not (char=? #\/ (string-ref tag 0)))
       ;; it's an end-tag, so push the tag
       (stack-push! tags tag)
       ;; if already in a tag, when new tag comes, one more level
       ;;(set! in-tag #t)
-      (and (cur-tag) (inc! levels))    
-      (indent-for-levels)) ; indent the tag
+      (indent-for-levels) ; indent the tag
+      (and (> levels 0) (inc! levels)))    
      ((char=? (peek-char port) #\sp) ; handle attributes
       (display (string-trim-both (read-delimited ">" port 'peek))))
      (else ; it's an end-tag
@@ -55,29 +73,26 @@
         (cond
          ((string=? t0 t1)
           (stack-pop! tags)
-          (indent-for-levels) ; indent the tag
-          (dec! levels))
-          ;;(set! in-tag #f))
+          (dec! levels)
+          (and (char=? #\nl last-char) (indent-for-levels))) ; indent the tag
          (else (error read-the-tag "Wrong tag pair!" (cons t0 t1)))))))
-    (display "<")
-    (display tag) ; valid tag, output it
+    (and tag (display "<") (display tag)) ; valid tag, output it
     (let ((c (read-char port)))
+      (set! last-char c)
       (if (eof-object? c)
           (error read-the-tag "Invalid XML file!" c)
           (display c))))) ; output ">"
 
 (define (do-xml-lint port)
   (let ((c (read-char port)))
+    (set! last-char c)
     (cond
-     ((eof-object? c) #t)
+     ((eof-object? c) "")
      ((char=? c #\<)
-      (and (not (char=? last-char #\nl)) (newline))
       (read-the-tag port)
-      (set! last-char c)
       (do-xml-lint port))
      (else 
       (display c)
-      (set! last-char c)
       (do-xml-lint port)))))
 
 (define* (xml-lint xml/port #:key (print #f) (indent-str "  "))
