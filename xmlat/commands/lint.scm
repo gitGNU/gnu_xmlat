@@ -23,8 +23,9 @@
  "Usage: xmlat lint [options]* filename
 
   -h | --help         ==> Show this screen.
-  -f | --format       ==> Specify the file format (ignore it to detect automatically)
+  -t | --type         ==> Specify the file type (ignore it to detect automatically)
   -o | --output       ==> Specify the output file (ignore it to print out it directly)
+  -i | --indent       ==> Indent string (two-spaces in default)
 
 Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
 ")
@@ -32,16 +33,18 @@ Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
 (define option-spec
   '((help (single-char #\h) (value #f))
     (type (single-char #\t) (value #t))
-    (output (single-char #\o) (value #t))))
+    (output (single-char #\o) (value #t))
+    (indent (single-char #\i) (value #t))))
 
-(define (do-xmlat-lint filename fmt outfile)
+(define* (do-xmlat-lint filename fmt outfile indent)
   (define linter 
     (let ((m (resolve-module `(xmlat lint ,fmt))))
       (if (module-filename m)
           (module-ref m (symbol-append fmt '-lint))
-          (error linter "The format is not supported!" fmt))))
+          (error do-xmlat-lint "The format is not supported!" fmt))))
   (define out (if (file-exists? filename)
-                  (call-with-input-file filename linter)
+                  (call-with-input-file filename 
+                    (lambda (port) (linter port #:indent-str indent)))
                   (error do-xmlat-lint "no such a file" filename)))
   (cond
    (outfile
@@ -57,17 +60,15 @@ Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
         (error detect-type
                "Can't detect the file format! Please specify it!" filename))))
 
-(define (get-the-file args)
-  (car (list-tail args (1- (length args)))))
-
 (define (xmlat-lint . args)
   (if (< (length args) 2)
       (display usage)
       (let* ((filename (get-the-file args))
-             (options (getopt-long args option-spec))
+             (options (getopt-long (get-the-opts args) option-spec))
              (need-help (option-ref options 'help #f))
              (has-type (option-ref options 'type #f))
-             (outfile (option-ref options 'output #f)))
+             (outfile (option-ref options 'output #f))
+             (indent (option-ref options 'indent #f)))
         (cond
          (need-help 
           (display usage)
@@ -75,6 +76,7 @@ Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
          (else
           (do-xmlat-lint filename 
                          (if has-type (string->symbol has-type) (detect-type filename))
-                         outfile))))))
-      
+                         outfile
+                         (if indent indent "  ")))))))
+
 (define main xmlat-lint)

@@ -19,11 +19,18 @@
   #:use-module (xmlat regexp)
   #:use-module (xmlat strop)
   #:use-module (srfi srfi-9)
+  #:use-module (srfi srfi-1)
   #:use-module (ice-9 q)
   #:export (make-args-get-method fetch-module get-file-ext get-string-all
             get-postfix-handler get-prefix-handler inc! dec!
             new-stack new-queue stack-pop! stack-push! stack-top stack-empty?
-            queue-out! queue-in! queue-head queue-tail queue-empty?))
+            queue-out! queue-in! queue-head queue-tail queue-empty?
+            get-the-file get-the-opts))
+
+(define (get-the-file args) (last args))
+(define (get-the-opts args) 
+  (cons "place-holder" ; getopt-long needs the first elem as the place-holder
+        (list-head args (1- (length args)))))
 
 (define get-string-all (@ (rnrs) get-string-all))
 

@@ -19,11 +19,10 @@
 (define-module (xmlat commands compile)
   #:use-module (xmlat utils)
   #:use-module (xmlat xml)
-  #:use-module (srfi srfi-1)
   #:use-module (ice-9 getopt-long))
 
 (define usage 
- "Usage: xmlat compile filename [options]*
+  "Usage: xmlat compile [options]* filename
 
   -h | --help         ==> Show this screen.
   -c | --constant     ==> Specify constan name, eg: \"name1=value1 ,name2=value2...\" 
@@ -56,27 +55,28 @@ And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012-2013.
 
 (define do-xmlat-compile
   (lambda (constant-list template stdout-xml makefile html-spaces pretty)
-    
+    (display "waiting...\n")
     #t))
-    
-(define xmlat-compile
-  (lambda args
-    (let* ((filename (if (< (length args) 2) (display usage) (car args)))
-	   (options (getopt-long args option-spec))
-	   (need-help (option-ref options 'help #f))
-	   (need-constant (option-ref options 'constant #f))
-	   (need-template (option-ref options 'template #f))
-	   (need-stdout-xml (option-ref options 'stdoutxml #f))
-	   (need-makefile (option-ref options 'makefile #f))
-	   (need-html-spaces (option-ref options 'htmlspaces #f))
-	   (need-pretty-format (option-ref options 'prettyformat #f)))
-      (and need-help (display usage) (primitive-exit)) ;; show help and exit.
-      (do-xmlat-compile 
-       (and need-constant (parse-constant-list need-constant))
-       (and need-template (handle-template need-template))
-       (and need-stdout-xml (handle-stdout-xml need-stdout-xml))
-       (and need-makefile (handle-makefile need-makefile))
-       (and need-html-spaces (handle-html-space need-html-spaces))
-       need-pretty-format)))) ;; end xmlat-compile. 
-      
+
+(define (xmlat-compile . args)
+  (if (< (length args) 2)
+      (display usage)
+      (let* ((filename (get-the-file args))
+             (options (getopt-long (get-the-opts args) option-spec))
+             (need-help (option-ref options 'help #f))
+             (need-constant (option-ref options 'constant #f))
+             (need-template (option-ref options 'template #f))
+             (need-stdout-xml (option-ref options 'stdoutxml #f))
+             (need-makefile (option-ref options 'makefile #f))
+             (need-html-spaces (option-ref options 'htmlspaces #f))
+             (need-pretty-format (option-ref options 'prettyformat #f)))
+        (and need-help (display usage) (primitive-exit)) ;; show help and exit.
+        (do-xmlat-compile 
+         (and need-constant (parse-constant-list need-constant))
+         (and need-template (handle-template need-template))
+         (and need-stdout-xml (handle-stdout-xml need-stdout-xml))
+         (and need-makefile (handle-makefile need-makefile))
+         (and need-html-spaces (handle-html-space need-html-spaces))
+         need-pretty-format)))) ;; end xmlat-compile. 
+
 (define main xmlat-compile)
