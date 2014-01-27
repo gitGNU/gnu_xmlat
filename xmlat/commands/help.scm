@@ -18,6 +18,9 @@
 
 (define-module (xmlat commands help)
   #:use-module (xmlat strop)
+  #:use-module (ice-9 ftw)
+  #:use-module (ice-9 regex)
+  #:use-module (srfi srfi-1)
   #:export (show-help))
 
 (define help-str-head
@@ -27,6 +30,7 @@ Original Author: Antonio Cisternino
 Current Maintainer: NalaGinrut<mulei@gnu.org> who rewritten it with GNU Guile.
 
 commands:
+
 ")
 
 (define help-str-foot
@@ -34,10 +38,28 @@ commands:
 God bless hacking.
 ")
 
+(define *cmd-re* (make-regexp "(.*).scm"))
+(define (get-module s)
+  (define m (regexp-exec *cmd-re* s))
+  (and m (match:substring m 1)))
+
+(define (findout-all-cmds)
+  (let* ((file (module-filename (resolve-module '(xmlat utils))))
+         (path (format #f "~a/commands/" (dirname file))))
+    (filter-map get-module (scandir path))))
+
+(define (cmds->string)
+  (call-with-output-string
+   (lambda (port)
+     (for-each
+      (lambda (cmd)
+        (let* ((m (resolve-module `(xmlat commands ,(string->symbol cmd))))
+               (summary (module-symbol-local-binding m '%summary)))
+          (format port "~a ~18t~a~%" cmd summary)))
+      (findout-all-cmds)))))
+
 (define (gen-help-str)
-  (+ help-str-head  "" help-str-foot)
-  ;; TODO: find out all commands name and summary, then print them all.
-  )
+  (+ help-str-head  (cmds->string) help-str-foot))
 
 (define (show-help) (display (gen-help-str)))
 

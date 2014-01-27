@@ -79,4 +79,5 @@ And rewritten with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2012-2013.
          (and need-html-spaces (handle-html-space need-html-spaces))
          need-pretty-format)))) ;; end xmlat-compile. 
 
+(define %summary "A compiler for predefined XML format.")
 (define main xmlat-compile)

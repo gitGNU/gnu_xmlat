@@ -77,4 +77,5 @@ Written with GNU Guile by NalaGinrut<mulei@gnu.org> (C)2013.
                      outfile
                      (if indent indent "  "))))))
 
+(define %summary "A lint tool for various formats.")
 (define main xmlat-lint)
